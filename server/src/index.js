@@ -36,23 +36,20 @@ app.enable('trust proxy')
 
 // Database connection import
 const { connectToDatabase } = require('./config/db_config.js')
-const client = require('./config/redis.config.js')
 
 // Connect to the database first, then do everything else later
-connectToDatabase()
-	.then(async () => await client.connect())
-	.then(() => {
-		app.get('/', (req, res) => {
-			res.status(200).json('Congratulations, your server is up and running!')
-		})
-
-		// Authentication
-
-		// .......
-
-		///////////////////////////////////
-		// User functions
-		// .......
-
-		app.listen(PORT, () => console.log(`listening on port ${PORT}`))
+connectToDatabase().then(() => {
+	app.get('/', (req, res) => {
+		res.status(200).json('Congratulations, your server is up and running!')
 	})
+
+	// Authentication
+
+	// .......
+
+	///////////////////////////////////
+	// User functions
+	// .......
+
+	app.listen(PORT, () => console.log(`listening on port ${PORT}`))
+})

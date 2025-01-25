@@ -4,7 +4,7 @@ import { join } from 'path'
 
 // Determine the correct .env file based on NODE_ENV or default to development
 const envFile =
-	process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development'
+	process.env.NODE_ENV === 'production' ? '.env.production' : '.env.local'
 
 // Load environment variables from the correct .env file
 config({ path: join(__dirname, '../../', envFile) })
