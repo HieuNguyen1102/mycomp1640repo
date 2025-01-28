@@ -27,6 +27,8 @@ npm run generate
 npm run migrate
 ```
 
+- After mgirating, import the data files in *demo_data* to their respective tables.
+
 - Run the server by running:
 ```bash
 npm run dev
