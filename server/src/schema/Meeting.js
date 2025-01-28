@@ -1,17 +1,12 @@
-const {
-	uuid,
-	text,
-	pgTable,
-	pgEnum,
-	timestamp,
-} = require('drizzle-orm/pg-core')
-const { Tutor } = require('./Tutor')
-const { User } = require('./User')
+import { uuid, text, pgTable, pgEnum, timestamp } from 'drizzle-orm/pg-core'
+
+import Tutor from './Tutor.js'
+import User from './User.js'
 
 // Define the ENUM type separately
-const meetingTypeEnum = pgEnum('meetingType', ['in-person', 'online'])
+export const meetingTypeEnum = pgEnum('meetingType', ['in-person', 'online'])
 
-const Meeting = pgTable('meeting', {
+export const Meeting = pgTable('meeting', {
 	meetingId: uuid('meetingId').defaultRandom().primaryKey(),
 	userId: uuid('userId').references(() => User.userId),
 	tutorId: uuid('tutorId')
@@ -22,5 +17,3 @@ const Meeting = pgTable('meeting', {
 	meetingNotes: text('meetingNotes'),
 	meetingLink: text('meetingLink'),
 })
-
-module.exports = { Meeting, meetingTypeEnum } // Export the ENUM

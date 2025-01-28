@@ -8,15 +8,14 @@ import {
 } from 'drizzle-orm/pg-core'
 import User from './User.js'
 
-const Post = pgTable('post', {
-	postId: uuid('postId').defaultRandom().primaryKey(),
+const LoginHistory = pgTable('login_history', {
+	loginId: uuid('loginId').defaultRandom().primaryKey(),
 	userId: uuid('userId')
 		.references(() => User.userId)
 		.notNull(),
-	postContent: text('postContent').notNull(),
-	postDate: timestamp('postDate', { withTimezone: true })
+	loginDate: timestamp('loginDate', { withTimezone: true })
 		.notNull()
 		.defaultNow(),
 })
 
-export default Post
+export default LoginHistory

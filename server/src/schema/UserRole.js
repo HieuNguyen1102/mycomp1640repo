@@ -1,6 +1,6 @@
-const { uuid, pgTable, primaryKey } = require('drizzle-orm/pg-core')
-const { User } = require('./User')
-const { Role } = require('./Role')
+import { uuid, pgTable, primaryKey } from 'drizzle-orm/pg-core'
+import User from './User.js'
+import Role from './Role.js'
 
 const UserRole = pgTable(
 	'user_role',
@@ -8,7 +8,7 @@ const UserRole = pgTable(
 		userId: uuid('userId')
 			.references(() => User.userId)
 			.notNull(),
-		roleId: uuid('roleName')
+		roleId: uuid('roleId')
 			.references(() => Role.roleId)
 			.notNull(),
 	},
@@ -17,4 +17,4 @@ const UserRole = pgTable(
 	}),
 )
 
-module.exports = { UserRole }
+export default UserRole

@@ -1,4 +1,4 @@
-const { uuid, text, pgTable, primaryKey } = require('drizzle-orm/pg-core')
+import { uuid, text, pgTable, primaryKey } from 'drizzle-orm/pg-core'
 
 const Role = pgTable('role', {
 	roleId: uuid('roleId').defaultRandom().primaryKey(),
@@ -6,4 +6,4 @@ const Role = pgTable('role', {
 	description: text('description'),
 })
 
-module.exports = { Role }
+export default Role

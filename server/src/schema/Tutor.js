@@ -1,5 +1,5 @@
-const { uuid, pgTable, text, primaryKey } = require('drizzle-orm/pg-core')
-const { User } = require('./User')
+import { uuid, pgTable, text, primaryKey } from 'drizzle-orm/pg-core'
+import User from './User.js'
 
 const Tutor = pgTable('tutor', {
 	tutorId: uuid('tutorId').defaultRandom().primaryKey(),
@@ -7,4 +7,4 @@ const Tutor = pgTable('tutor', {
 		.references(() => User.userId)
 		.notNull(),
 })
-module.exports = { Tutor }
+export default Tutor

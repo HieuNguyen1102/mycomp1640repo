@@ -1,8 +1,8 @@
 // Node.js body parsing middleware.
-const bodyParser = require('body-parser')
+import bodyParser from 'body-parser'
 
 // ExpressJS framework for HTTP server.
-const express = require('express')
+import express from 'express'
 const app = express()
 
 app.use(express.json())
@@ -17,10 +17,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const PORT = process.env.PORT || 5000
 
 // CORS import.
-const cors = require('cors')
+import cors from 'cors'
 
 // CORS policies.
-
 app.use(
 	cors({
 		origin: JSON.parse(process.env.ALLOWED_HOSTS ?? '[]'),
@@ -29,27 +28,30 @@ app.use(
 )
 app.enable('trust proxy')
 
-// Uncomment these 2 lines if you want to start a cron job.
-// Be sure to modify the function.
-// const { task } = require('./utils/cronjob')
-// task.start()
-
 // Database connection import
-const { connectToDatabase } = require('./config/db_config.js')
+import { connectToDatabase } from './config/db_config.js'
+import { alreadyLoggedIn, authenticateApp, Login } from './lib/auth.js'
 
 // Connect to the database first, then do everything else later
 connectToDatabase().then(() => {
 	app.get('/', (req, res) => {
-		res.status(200).json('Congratulations, your server is up and running!')
+		res.json('Congratulations, your server is up and running!')
 	})
 
 	// Authentication
 
-	// .......
+	app.post('/login', authenticateApp, alreadyLoggedIn, async (req, res) => {
+		const response = await Login(req, res)
+		res.status(response.status).json(response.item)
+	})
+
+	//....
 
 	///////////////////////////////////
+
 	// User functions
-	// .......
+
+	//....
 
 	app.listen(PORT, () => console.log(`listening on port ${PORT}`))
 })

@@ -13,13 +13,19 @@
 		"migrate": "drizzle-kit migrate --config=./src/config/drizzle.config.js"
 	},
 	"author": "",
+	"type": "module",
 	"license": "ISC",
 	"dependencies": {
+		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.20.2",
 		"cors": "^2.8.5",
+		"crypto": "^1.0.1",
 		"drizzle-orm": "^0.33.0",
 		"express": "^4.18.2",
-		"postgres": "^3.4.4"
+		"jsonwebtoken": "^9.0.2",
+		"nodemailer": "^6.10.0",
+		"postgres": "^3.4.4",
+		"winston": "^3.17.0"
 	},
 	"devDependencies": {
 		"dotenv": "^16.4.5",

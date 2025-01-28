@@ -1,12 +1,4 @@
-const {
-	uuid,
-	text,
-	Date,
-	boolean,
-	pgTable,
-	primaryKey,
-	timestamp,
-} = require('drizzle-orm/pg-core')
+import { uuid, text, boolean, pgTable } from 'drizzle-orm/pg-core'
 
 const User = pgTable('user', {
 	userId: uuid('userId').defaultRandom().primaryKey(),
@@ -14,9 +6,6 @@ const User = pgTable('user', {
 	password: text('password').notNull(),
 	email: text('email').notNull(),
 	isActive: boolean('isActive').default(false).notNull(),
-	isLocked: boolean('isActive').default(false).notNull(),
-	lastLoggedIn: timestamp('lastLoggedIn', { withTimezone: true })
-		.notNull()
-		.defaultNow(),
+	isLocked: boolean('isLocked').default(false).notNull(),
 })
-module.exports = { User }
+export default User

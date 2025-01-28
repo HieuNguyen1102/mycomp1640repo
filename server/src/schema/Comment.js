@@ -1,13 +1,13 @@
-const {
+import {
 	uuid,
 	text,
 	pgTable,
 	timestamp,
 	pgEnum,
 	primaryKey,
-} = require('drizzle-orm/pg-core')
-const { User } = require('./User')
-const { Post } = require('./Post')
+} from 'drizzle-orm/pg-core'
+import User from './User.js'
+import Post from './Post.js'
 
 const Comment = pgTable('comment', {
 	commentId: uuid('commentId').defaultRandom().primaryKey(),
@@ -23,4 +23,4 @@ const Comment = pgTable('comment', {
 		.defaultNow(),
 })
 
-module.exports = { Comment }
+export default Comment

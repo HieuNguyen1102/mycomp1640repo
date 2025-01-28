@@ -1,14 +1,14 @@
-const { drizzle } = require('drizzle-orm/postgres-js')
-const { config } = require('dotenv')
+import { drizzle } from 'drizzle-orm/postgres-js'
+import { config } from 'dotenv'
 config()
 
-const postgres = require('postgres')
+import postgres from 'postgres'
 
 const queryClient = postgres(process.env.DB_URL)
 
-const db = drizzle(queryClient)
+export const db = drizzle(queryClient)
 
-async function connectToDatabase() {
+export async function connectToDatabase() {
 	try {
 		await queryClient`SELECT 1`
 		console.log('Connected to PostgreSQL')
@@ -16,5 +16,3 @@ async function connectToDatabase() {
 		console.error('Failed to connect to the database:', error)
 	}
 }
-
-module.exports = { db, connectToDatabase }

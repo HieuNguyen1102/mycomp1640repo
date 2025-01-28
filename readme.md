@@ -1,13 +1,14 @@
-# COMP1640 - TCH2601 - Nguyễn Group
+# **COMP1640 - TCH2601 - Nguyễn Group**
 
-## 1. Server
+## **1. Server**
 
-- Go to the `server` folder.
+- Go to the *server* folder.
 
-- Duplicate `.env.example` and rename it to something like `.env.local`.
+- Duplicate *.env.example* and rename it to something like *.env.local*.
 > Note:
->> - Do NOT delete .env.example or put your values in it.
->> - The ones already filled out are the default values which are highly recommended to be left alone, unless you know what you are doing.
+> - Do NOT delete *.env.example* or put your values in it.
+> - The ones already filled out are the default values which are highly recommended to be left alone, unless you know what you are doing.
+> - For *GMAIL_USER* and *GMAIL_PASS*, follow [this instruction](https://support.google.com/accounts/answer/185833?hl=en) to create an app password for your **Google account**.
 
 - Fill out the environment variables with your own values.
 
@@ -16,7 +17,7 @@
 npm install
 ```
 
-- Create a migration for the PostgreSQL database:
+- Create a migration for the **PostgreSQL** database:
 ```bash
 npm run generate
 ```
@@ -37,11 +38,11 @@ Connected to PostgreSQL
 listening on port 5000
 ```
 
-## 2. Web Client
-- Go to the `web` folder.
+## **2. Web Client**
+- Go to the *web* folder.
 
 - Do everything like the server to setup the environment variables.
-> Note: copy `API_KEY` from server's environment and paste it in `VITE_APIKEY`.
+> Note: copy *API_KEY* from server's environment and paste it in *VITE_APIKEY*.
 
 - Install the dependencies by running:
 ```bash
