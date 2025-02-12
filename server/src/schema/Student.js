@@ -10,5 +10,6 @@ const Student = pgTable('student', {
 	personalTutorId: uuid('personalTutorId')
 		.references(() => Tutor.tutorId)
 		.notNull(),
+	weaknesses: PgArray(text('weaknesses')).notNull(),
 })
 export default Student

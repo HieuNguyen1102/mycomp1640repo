@@ -10,6 +10,9 @@ import User from './User.js'
 
 const Message = pgTable('message', {
 	messageId: uuid('messageId').defaultRandom().primaryKey(),
+	conversationId: uuid('conversationId')
+		.references(() => Conversation.conversationId)
+		.notNull(),
 	senderId: uuid('senderId')
 		.references(() => User.userId)
 		.notNull(),

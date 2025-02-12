@@ -1,4 +1,4 @@
-import { uuid, text, boolean, pgTable } from 'drizzle-orm/pg-core'
+import { uuid, text, boolean, pgTable, PgArray } from 'drizzle-orm/pg-core'
 
 const User = pgTable('user', {
 	userId: uuid('userId').defaultRandom().primaryKey(),
@@ -7,5 +7,7 @@ const User = pgTable('user', {
 	email: text('email').notNull(),
 	isActive: boolean('isActive').default(false).notNull(),
 	isLocked: boolean('isLocked').default(false).notNull(),
+	skills: PgArray(text('skills')).notNull(),
+	biography: text('biography').notNull(),
 })
 export default User
