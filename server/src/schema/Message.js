@@ -7,6 +7,7 @@ import {
 	primaryKey,
 } from 'drizzle-orm/pg-core'
 import User from './User.js'
+import Conversation from './Conversation.js'
 
 const Message = pgTable('message', {
 	messageId: uuid('messageId').defaultRandom().primaryKey(),
