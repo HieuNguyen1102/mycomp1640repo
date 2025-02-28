@@ -5,7 +5,7 @@ import LoginPage from './Pages/LoginPage'
 import HomePage from './Pages/HomePage'
 import OverViewPage from './Pages/Overview'
 import ClassPage from './Pages/ClassPage'
-import NotFound from './Components/NotFound'
+import NotFound from './components/NotFound'
 import StaffLayout from './Pages/Staff'
 import EditClass from './Pages/Staff/Class/EditClass'
 import AddClass from './Pages/Staff/Class/AddClass'
@@ -26,13 +26,18 @@ function App() {
 						element={<HomePage />}
 					/>
 					<Route
-						path='/overview'
+						path='/dashboard/overview'
 						element={<OverViewPage />}
 					/>
 
 					<Route
 						index
-						path='/classes'
+						path='/dashboard/classes'
+						element={<ClassPage />}
+					/>
+					<Route
+						index
+						path='/dashboard/classes/:id'
 						element={<ClassPage />}
 					/>
 					<Route
@@ -42,11 +47,11 @@ function App() {
 				</Route>
 				<Route element={<StaffLayout />}>
 					<Route
-						path='/class/edit'
+						path='/classes/:id/edit'
 						element={<EditClass />}
 					/>
 					<Route
-						path='/class/add'
+						path='/classes/add'
 						element={<AddClass />}
 					/>
 				</Route>
