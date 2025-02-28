@@ -7,6 +7,6 @@ const User = pgTable('user', {
 	email: text('email').notNull(),
 	isActive: boolean('isActive').default(false).notNull(),
 	isLocked: boolean('isLocked').default(false).notNull(),
-	biography: text('biography').notNull(),
+	biography: text('biography'),
 })
 export default User

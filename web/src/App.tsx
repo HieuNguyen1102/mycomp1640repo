@@ -6,9 +6,10 @@ import HomePage from './Pages/HomePage'
 import OverViewPage from './Pages/Overview'
 import ClassPage from './Pages/ClassPage'
 import NotFound from './components/NotFound'
-import StaffLayout from './Pages/Staff'
-import EditClass from './Pages/Staff/Class/EditClass'
+import StaffLayout from './Pages/Staff/layout'
+import ReallocateStudentPage from './Pages/Staff/Class/ReallocateStudentPage'
 import AddClass from './Pages/Staff/Class/AddClass'
+import StaffDashboardPage from './Pages/Staff/StaffDashboardPage'
 
 function App() {
 	return (
@@ -47,12 +48,16 @@ function App() {
 				</Route>
 				<Route element={<StaffLayout />}>
 					<Route
-						path='/classes/:id/edit'
-						element={<EditClass />}
+						path='/staff'
+						element={<StaffDashboardPage />}
 					/>
 					<Route
-						path='/classes/add'
+						path='/staff/classes/new'
 						element={<AddClass />}
+					/>
+					<Route
+						path='/staff/reallocate'
+						element={<ReallocateStudentPage />}
 					/>
 				</Route>
 			</Routes>

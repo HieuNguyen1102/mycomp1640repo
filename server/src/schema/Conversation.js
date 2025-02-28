@@ -9,7 +9,7 @@ import {
 import User from './User.js'
 
 const Conversation = pgTable('conversation', {
-	conversationId: uuid('conversationId').defaultRandom().primaryKey(),
+	id: uuid('id').defaultRandom().primaryKey(),
 	user1Id: uuid('user1Id')
 		.references(() => User.userId)
 		.notNull(),
