@@ -2,7 +2,7 @@ import { db } from '../config/db_config.js'
 import Student from '../schema/Student.js'
 import Tutor from '../schema/Tutor.js'
 import Class from '../schema/Class.js'
-import { Log, logError } from './logger.js'
+import { Log, logError } from '../lib/logger.js'
 import { and, eq } from 'drizzle-orm'
 import User from '../schema/User.js'
 
@@ -87,5 +87,24 @@ export const getDataForCreatingClass = async () => {
 	} catch (err) {
 		logError('get data for creating class', err)
 		return { status: 500, error: err }
+	}
+}
+
+export const addNewClass = async ({ studentId, tutorId, className }) => {
+	if (!studentId || !tutorId || !className)
+		return { status: 400, error: 'Missing required fields' }
+
+	try {
+		const newRow = await db
+			.insert(Class)
+			.values({ studentId, tutorId, className })
+			.onConflictDoNothing()
+			.returning()
+
+		Log('new class added')
+		return { status: 200, item: newRow }
+	} catch (err) {
+		logError('add new class', err)
+		return { status: 500, item: err }
 	}
 }

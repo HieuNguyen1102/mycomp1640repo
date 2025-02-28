@@ -16,6 +16,7 @@ import RequiredLabelIcon from '@/components/RequiredLabelIcon'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { getDataForCreatingClass } from '@/actions/getData'
+import { AddNewClass } from '@/actions/postData'
 
 function ClassUpdateForm({
 	class_detail,
@@ -35,8 +36,9 @@ function ClassUpdateForm({
 		},
 	})
 
-	const onSubmit = (values: z.infer<typeof addClassSchema>) => {
-		alert(JSON.stringify(values))
+	const onSubmit = async (values: z.infer<typeof addClassSchema>) => {
+		const response = await AddNewClass(values)
+		if (response) alert('Class added successfully')
 	}
 
 	const [studentsAndTutors, setStudentsAndTutors] = useState<{
