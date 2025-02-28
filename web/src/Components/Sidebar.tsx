@@ -2,9 +2,9 @@ import React from 'react'
 import { FaHouse } from 'react-icons/fa6'
 import { FaBookOpenReader } from 'react-icons/fa6'
 import { FaCalendar } from 'react-icons/fa6'
-import MenuButton from './MenuButton'
 import { FaGear } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
+import MenuButton from '@/components/MenuButton'
 
 function Sidebar() {
 	return (
@@ -35,7 +35,7 @@ function Sidebar() {
 							<h4 className='text-sm'>Student</h4>
 						</div>
 					</div>
-					<Link to='/#'>
+					<Link to='#'>
 						<FaGear className='h-5 w-5' />
 					</Link>
 				</div>

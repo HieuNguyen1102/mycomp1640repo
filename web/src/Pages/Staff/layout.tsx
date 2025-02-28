@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom'
-import Sidebar from '@/components/Sidebar'
+import StaffSidebar from '@/components/StaffSidebar'
 
-function Layout() {
+function StaffLayout() {
 	return (
 		<div className='bg-accent/5 min-h-screen'>
 			<div className='flex flex-row'>
-				<Sidebar />
-				<div className='flex-1 ml-64 container'>
+				<StaffSidebar />
+				<div className='flex-1 ml-64 container p-15'>
 					<Outlet />
 				</div>
 			</div>
@@ -14,4 +14,4 @@ function Layout() {
 	)
 }
 
-export default Layout
+export default StaffLayout

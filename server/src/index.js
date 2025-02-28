@@ -31,6 +31,7 @@ app.enable('trust proxy')
 // Database connection import
 import { connectToDatabase } from './config/db_config.js'
 import { alreadyLoggedIn, authenticateApp, Login } from './lib/auth.js'
+import { addNewClass, getDataForCreatingClass } from './db/class.js'
 
 // Connect to the database first, then do everything else later
 connectToDatabase().then(() => {
@@ -42,6 +43,20 @@ connectToDatabase().then(() => {
 
 	app.post('/login', authenticateApp, alreadyLoggedIn, async (req, res) => {
 		const response = await Login(req, res)
+		res.status(response.status).json(response.item)
+	})
+
+	app.get('/getDataForCreatingClass', async (req, res) => {
+		const response = await getDataForCreatingClass()
+		res.status(response.status).json(response.item)
+	})
+
+	app.post('/addNewClass', async (req, res) => {
+		const response = await addNewClass({
+			studentId: req.body.studentId,
+			tutorId: req.body.tutorId,
+			className: req.body.className,
+		})
 		res.status(response.status).json(response.item)
 	})
 

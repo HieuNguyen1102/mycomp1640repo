@@ -12,7 +12,7 @@ import Conversation from './Conversation.js'
 const Message = pgTable('message', {
 	messageId: uuid('messageId').defaultRandom().primaryKey(),
 	conversationId: uuid('conversationId')
-		.references(() => Conversation.conversationId)
+		.references(() => Conversation.id)
 		.notNull(),
 	senderId: uuid('senderId')
 		.references(() => User.userId)
