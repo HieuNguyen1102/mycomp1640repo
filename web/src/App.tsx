@@ -5,12 +5,13 @@ import LoginPage from './Pages/LoginPage'
 import HomePage from './Pages/HomePage'
 import OverViewPage from './Pages/Overview'
 import ClassPage from './Pages/ClassPage'
-import NotFound from './components/NotFound'
+import NotFound from '@/Components/NotFound'
 import StaffLayout from './Pages/Staff/layout'
 import ReallocateStudentPage from './Pages/Staff/Class/ReallocateStudentPage'
 import AddClass from './Pages/Staff/Class/AddClass'
 import StaffDashboardPage from './Pages/Staff/StaffDashboardPage'
 import { GlobalStateProvider } from './misc/GlobalStateContext'
+import MessagePage from './Pages/MessagePage'
 
 function App() {
 	return (
@@ -46,6 +47,11 @@ function App() {
 							index
 							path='/dashboard/classes/:id'
 							element={<ClassPage />}
+						/>
+						<Route
+							index
+							path='/dashboard/classes/:id/message'
+							element={<MessagePage />}
 						/>
 					</Route>
 					<Route element={<StaffLayout />}>
