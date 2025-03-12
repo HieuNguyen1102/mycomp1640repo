@@ -42,6 +42,7 @@ import {
 import {
 	addNewClass,
 	getClassById,
+	getClassesForUser,
 	getDataForCreatingClass,
 } from './db/class.js'
 import { getLoggedInUser } from './db/user.js'
@@ -53,6 +54,7 @@ import {
 
 import { Server } from 'socket.io'
 import http from 'http'
+import { Log } from './lib/logger.js'
 
 const server = http.createServer(app)
 
@@ -70,7 +72,7 @@ connectToDatabase().then(() => {
 	// Websocket for direct messaging
 	io.use((socket, next) => {
 		const username = socket.handshake.auth.username
-		console.log(`user ${username} connected`)
+		Log(`user ${username} connected`)
 		delete usersSockets[username]
 		usersSockets[username] = socket.id
 		socket.username = username
@@ -105,7 +107,7 @@ connectToDatabase().then(() => {
 		})
 
 		socket.on('disconnect', () => {
-			console.log('user disconnected')
+			Log('user disconnected')
 
 			delete usersSockets[socket.username]
 		})
@@ -168,6 +170,19 @@ connectToDatabase().then(() => {
 		},
 	)
 
+	app.get(
+		'/getClassesForUser/:userId/:role',
+		authenticateApp,
+		authenticateToken,
+		async (req, res) => {
+			const response = await getClassesForUser(
+				req.params.userId,
+				req.params.role,
+			)
+			res.status(response.status).json(response.item)
+		},
+	)
+
 	//....
 
 	///////////////////////////////////
@@ -185,15 +200,18 @@ connectToDatabase().then(() => {
 	)
 
 	app.get(
-		'/getClassById/:classId',
+		'/getClassById/:classId/:userId/:role',
 		authenticateApp,
 		authenticateToken,
 		async (req, res) => {
-			const response = await getClassById(req.params.classId)
+			const response = await getClassById({
+				classId: req.params.classId,
+				userId: req.params.userId,
+				role: req.params.role,
+			})
 			res.status(response.status).json(response.item)
 		},
 	)
 
 	server.listen(PORT, () => console.log(`listening on port ${PORT}`))
-
 })
