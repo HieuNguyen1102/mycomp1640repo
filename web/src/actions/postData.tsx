@@ -1,35 +1,35 @@
 import { addClassSchema } from '@/schemas/class'
 import { loginInfoSchema } from '@/schemas/login'
+import { z } from 'zod'
 
-export const AddNewClass = async (unsafeData: any, token: string) => {
+export async function AddNewClass(
+	formData: z.infer<typeof addClassSchema>,
+	authToken: string
+) {
 	try {
-		const { success, data } = addClassSchema.safeParse(unsafeData)
+		console.log('Sending class data:', formData)
 
-		if (success) {
-			const url = import.meta.env.VITE_HOST + '/addNewClass'
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authentication: `Bearer ${token}`,
-					API: 'X-Api-Key ' + import.meta.env.VITE_APIKEY,
-				},
+		const response = await fetch(`${import.meta.env.VITE_HOST}/addNewClass`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authentication: `Bearer ${authToken}`,
+				API: 'X-Api-Key ' + import.meta.env.VITE_APIKEY,
+			},
+			body: JSON.stringify(formData),
+		})
 
-				body: JSON.stringify(data),
-			}
-			const response = await fetch(url, options)
-			const returned_data = await response.json()
+		const data = await response.json()
+		console.log('Response:', response.status, data)
 
-			if (response.status !== 200) {
-				return { students: [], tutors: [] }
-			}
-			return returned_data
-		} else {
-			return null
+		if (!response.ok) {
+			throw new Error(data.error || 'Failed to create class')
 		}
-	} catch (err) {
-		console.error(err)
-		return null
+
+		return data
+	} catch (error) {
+		console.error('Fetch error:', error)
+		throw error
 	}
 }
 
@@ -104,3 +104,35 @@ export const LogoutAPI = async ({
 		}
 	}
 }
+
+export async function reallocateClass(
+	authToken: string,
+	{ classId, newStudentId, newTutorId }: { classId: string; newStudentId?: string; newTutorId?: string }
+) {
+	try {
+		console.log('Sending reallocation request:', { classId, newStudentId, newTutorId })
+
+		const response = await fetch(`${import.meta.env.VITE_HOST}/class/reallocate`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authentication: `Bearer ${authToken}`,
+				API: 'X-Api-Key ' + import.meta.env.VITE_APIKEY,
+			},
+			body: JSON.stringify({ classId, newStudentId, newTutorId }),
+		})
+
+		const data = await response.json()
+		console.log('Reallocation response:', data)
+
+		if (!response.ok) {
+			throw new Error(data.item?.error || 'Failed to reallocate class')
+		}
+
+		return data.item
+	} catch (error) {
+		console.error('Error in reallocateClass:', error)
+		throw error
+	}
+}
+
