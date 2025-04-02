@@ -57,6 +57,11 @@ import {
 import { Server } from 'socket.io'
 import http from 'http'
 import { Log } from './lib/logger.js'
+import {
+	changeMeetingAttendance,
+	getAllMeetingsOfAClass,
+	newMeeting,
+} from './db/meeting.js'
 
 const server = http.createServer(app)
 
@@ -71,7 +76,6 @@ const usersSockets = {}
 
 // Connect to the database first, then do everything else later
 connectToDatabase().then(() => {
-	
 	// Websocket for direct messaging
 	io.use((socket, next) => {
 		const username = socket.handshake.auth.username
@@ -152,8 +156,48 @@ connectToDatabase().then(() => {
 				startDate: req.body.startDate,
 				endDate: req.body.endDate,
 				schedule: req.body.schedule,
-				meetingLink: req.body.meetingLink
+				meetingLink: req.body.meetingLink,
 			})
+			res.status(response.status).json(response.item)
+		},
+	)
+
+	app.post(
+		'/newMeeting',
+		authenticateApp,
+		authenticateToken,
+		async (req, res) => {
+			const response = await newMeeting({
+				classId: req.body.classId,
+				meetingDate: req.body.meetingDate,
+				meetingType: req.body.meetingType,
+				meetingNote: req.body.meetingNote,
+				meetingLink: req.body.meetingLink,
+				location: req.body.location,
+				studentAttended: req.body.studentAttended,
+			})
+			res.status(response.status).json(response.item)
+		},
+	)
+
+	app.post(
+		'/changeMeetingAttendance',
+		authenticateApp,
+		authenticateToken,
+		async (req, res) => {
+			const response = await changeMeetingAttendance({
+				meetings: req.body.meetings,
+			})
+			res.status(response.status).json(response.item)
+		},
+	)
+
+	app.get(
+		'/getMeetingsOfAClass/:classId',
+		authenticateApp,
+		authenticateToken,
+		async (req, res) => {
+			const response = await getAllMeetingsOfAClass(req.params.classId)
 			res.status(response.status).json(response.item)
 		},
 	)
@@ -198,19 +242,19 @@ connectToDatabase().then(() => {
 		staffOnly,
 		async (req, res) => {
 			try {
-				console.log('Getting all classes...')
 				const response = await getAllClasses()
-				console.log('getAllClasses response:', response)
-				
+
 				if (!response) {
 					console.error('getAllClasses returned null/undefined')
 					return res.status(500).json({ error: 'Internal server error' })
 				}
-				
+
 				res.status(response.status).json(response.item)
 			} catch (error) {
 				console.error('Error in /getAllClasses endpoint:', error)
-				res.status(500).json({ error: error.message || 'Internal server error' })
+				res
+					.status(500)
+					.json({ error: error.message || 'Internal server error' })
 			}
 		},
 	)
