@@ -70,9 +70,11 @@ export const getConversation = async ({
 export const getMessages = async ({
 	token,
 	conversationId,
+	offsset,
 }: {
 	token: string
 	conversationId?: string | null
+	offset: number
 }) => {
 	const url = `${import.meta.env.VITE_HOST}/getMessages`
 
@@ -83,7 +85,7 @@ export const getMessages = async ({
 			Authentication: `Bearer ${token}`,
 			API: 'X-Api-Key ' + import.meta.env.VITE_APIKEY,
 		},
-		body: JSON.stringify({ conversationId }),
+		body: JSON.stringify({ conversationId, offsset }),
 	}
 
 	const response = await fetch(url, options)
@@ -151,10 +153,8 @@ export const getClassesForUser = async ({
 			},
 		}
 
-		console.log('Fetching classes with options:', options)
 		const response = await fetch(url, options)
 		const data = await response.json()
-		console.log('Classes response:', data)
 
 		if (!response.ok) {
 			console.error('Failed to fetch classes:', data)
@@ -178,7 +178,6 @@ export const getClassesForUser = async ({
 		}
 
 		// If no valid data format is found, return empty array
-		console.log('No valid data format found')
 		return []
 	} catch (error) {
 		console.error('Error fetching classes:', error)
@@ -198,10 +197,8 @@ export const getAllClasses = async (token: string) => {
 			},
 		}
 
-		console.log('Fetching classes with options:', options)
 		const response = await fetch(url, options)
 		const data = await response.json()
-		console.log('Classes response:', data)
 
 		if (!response.ok) {
 			console.error('Failed to fetch classes:', data)

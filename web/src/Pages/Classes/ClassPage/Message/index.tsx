@@ -2,7 +2,7 @@ import { getClassById, getConversation, getMessages } from '@/actions/getData'
 import { getSocket, initializeSocket } from '@/lib/socket'
 import { convertToLocalTimezone } from '@/lib/utils'
 import { useGlobalState } from '@/misc/GlobalStateContext'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { FaPaperPlane } from 'react-icons/fa6'
@@ -25,6 +25,7 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 	const [conversation, setConversation] = useState(null)
 	const [socket, setSocket] = useState<any>(null)
 
+	const [page, setPage] = useState(0)
 	useEffect(() => {
 		if (currentUser) {
 			initializeSocket(currentUser.username)
@@ -40,7 +41,7 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 		} else {
 			setCurrentClass(found_class)
 		}
-		
+
 		const found_conversation = await getConversation({
 			token: authToken,
 			classId: params.id ?? '',
@@ -52,9 +53,12 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 			const found_messages = await getMessages({
 				token: authToken,
 				conversationId: found_conversation.id,
+				offset: 0,
 			})
 
-			if (found_messages) setMessages(found_messages)
+			if (found_messages)
+				// setMessages((prevMessages) => [...prevMessages, ...found_messages])
+				setMessages(found_messages)
 		} else {
 			navigate('/')
 		}
@@ -64,7 +68,7 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 		if (socket) {
 			if (conversation) socket.emit('joinRoom', (conversation as any).id)
 			socket.on('receiveMessage', (messageData: any) => {
-				setMessages((prevMessages) => [...prevMessages, messageData])
+				setMessages((prevMessages) => [messageData, ...prevMessages])
 			})
 
 			return () => {
@@ -75,9 +79,14 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 
 	useEffect(() => {
 		if (currentUser) getData()
-	}, [currentUser])
+	}, [])
 
 	const [message, setMessage] = useState('')
+
+	const messagesEndRef = useRef(null)
+	useEffect(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+	}, [messages]) // Runs when messages update
 
 	const sendMessage = () => {
 		if (message && socket && conversation && currentUser) {
@@ -89,7 +98,7 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 				sendDate: new Date().toISOString(),
 			}
 
-			setMessages((prevMessages) => [...prevMessages, messageData])
+			setMessages((prevMessages) => [messageData, ...prevMessages])
 
 			socket.emit('sendMessage', {
 				message: messageData,
@@ -130,13 +139,11 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 					<div className='flex-1 p-4 overflow-y-auto'>
 						<div className='flex flex-col space-y-4'>
 							{/* Example message */}
-
 							{messages.length === 0 && (
 								<div className='text-center text-gray-500'>No messages yet</div>
 							)}
-
 							{messages.length > 0 &&
-								messages.map(
+								[...messages].reverse().map(
 									(message, i) =>
 										(message.senderId === currentUser.id && (
 											<div
@@ -144,7 +151,7 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 												key={i}
 											>
 												<div>
-													<div className='bg-blue-500 text-white p-2 rounded-lg lg:max-w-200'>
+													<div className='bg-blue-500 text-white p-2 rounded-lg max-w-xs md:max-w-md lg:max-w-lg'>
 														<p className='break-words'>
 															{message.messageContent}
 														</p>
@@ -163,7 +170,7 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 													className='rounded-full w-10 h-10'
 												/>
 												<div>
-													<div className='bg-purple-500 text-white p-2 rounded-lg lg:max-w-200'>
+													<div className='bg-blue-500 text-white p-2 rounded-lg max-w-xs md:max-w-md lg:max-w-lg'>
 														<p className='break-words'>
 															{message.messageContent}
 														</p>
@@ -175,6 +182,7 @@ const MessagePage = ({ found_class }: { found_class: any }) => {
 											</div>
 										)),
 								)}
+							<div ref={messagesEndRef} /> {/* Invisible div at the bottom */}
 						</div>
 					</div>
 

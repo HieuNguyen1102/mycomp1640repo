@@ -77,28 +77,19 @@ export const newMeeting = async ({
 	classId,
 	meetingDate,
 	meetingType,
-	meetingNote,
+	meetingNotes,
 	meetingLink,
 	location,
 	studentAttended,
 }) => {
 	try {
-		console.log({
-			classId,
-			meetingDate,
-			meetingType,
-			meetingNote,
-			meetingLink,
-			location,
-			studentAttended,
-		})
 		const newMeeting = await db
 			.insert(Meeting)
 			.values({
 				classId,
 				meetingDate: new Date(meetingDate),
 				meetingType,
-				meetingNote: meetingNote ? meetingNote : null,
+				meetingNotes: meetingNotes ? meetingNotes : null,
 				meetingLink: meetingLink ? meetingLink : null,
 				location: location ? location : null,
 				studentAttended,
