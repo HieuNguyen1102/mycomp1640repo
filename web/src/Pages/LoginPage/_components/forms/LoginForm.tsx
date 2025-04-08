@@ -51,8 +51,15 @@ function LoginForm() {
 				// Successful login
 				if (response.message.role === 'staff') {
 					navigate('/staff')
+<<<<<<< HEAD
+				} else if (response.message.id) {
+					navigate(`/dashboard/${response.message.id}`)
+				} else {
+					setError('Login successful, but user ID is missing. Please contact support.')
+=======
 				} else {
 					navigate('/')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 				}
 			}
 		} catch (err) {

@@ -43,6 +43,14 @@ const generateToken = async (user) => {
 		// No secret key = bye bye
 		const secretKey = process.env.JWT_SECRET_KEY
 		if (!secretKey) {
+<<<<<<< HEAD
+			return {
+				status: 500,
+				item: logError(
+					'generate an authentication token',
+					'No token encryption secret key was found.',
+				),
+=======
 			logError(
 				'generate an authentication token',
 				'No token encryption secret key was found.',
@@ -50,6 +58,7 @@ const generateToken = async (user) => {
 			return {
 				status: 500,
 				item: 'No token encryption secret key was found.',
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			}
 		}
 
@@ -81,10 +90,16 @@ const generateToken = async (user) => {
 			},
 		}
 	} catch (err) {
+<<<<<<< HEAD
+		return {
+			status: 500,
+			item: logError('generate an authentication token', err),
+=======
 		logError('generate an authentication token', err)
 		return {
 			status: 500,
 			item: err,
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		}
 	}
 }
@@ -110,8 +125,12 @@ export const Login = async (req, res) => {
 
 		return { status: token.status, item: token.item }
 	} catch (err) {
+<<<<<<< HEAD
+		return { status: 500, item: logError('login', err) }
+=======
 		logError('login', err)
 		return { status: 500, item: err }
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 ///////////////////////////////////
@@ -127,7 +146,15 @@ export const Login = async (req, res) => {
 const ValidateInputLogin = async (req, res) => {
 	try {
 		if (!req.body) {
+<<<<<<< HEAD
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('No body sent.')
+=======
 			logError('validate login credentials', 'No body sent.')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return {
 				status: 401,
 				item: 'No body sent.',
@@ -135,14 +162,30 @@ const ValidateInputLogin = async (req, res) => {
 		}
 		if (!req.body.username) {
 			// If your system uses username to login, change it to username
+<<<<<<< HEAD
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Please enter a username.')
+=======
 			logError('validate login credentials', 'Please enter a username.')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return {
 				status: 401,
 				item: 'Please enter a username.',
 			}
 		}
 		if (!req.body.password) {
+<<<<<<< HEAD
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Please enter a password.')
+=======
 			logError('validate login credentials', 'Please enter a password.')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return {
 				status: 401,
 				item: 'Please enter a password.',
@@ -157,7 +200,15 @@ const ValidateInputLogin = async (req, res) => {
 				.limit(1)
 		)[0]
 		if (!user) {
+<<<<<<< HEAD
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Invalid username or password.')
+=======
 			logError('validate login credentials', 'Invalid username or password.')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return {
 				status: 401,
 				item: 'Invalid username or password.',
@@ -165,7 +216,15 @@ const ValidateInputLogin = async (req, res) => {
 		}
 		const compare_hash = await compareHash(req.body.password, user.password)
 		if (compare_hash && compare_hash.status !== 200) {
+<<<<<<< HEAD
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Invalid username or password.')
+=======
 			logError('validate login credentials', 'Invalid username or password.')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return {
 				status: 401,
 				item: 'Invalid username or password.',
@@ -173,14 +232,31 @@ const ValidateInputLogin = async (req, res) => {
 		}
 		return { status: 200, item: user }
 	} catch (err) {
+<<<<<<< HEAD
+		return { status: 500, item: logError('validate login credentials', err) }
+=======
 		logError('validate login credentials', err)
 		return { status: 500, item: err }
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 ///////////////////////////////////
 
 const decodeToken = async (token) => {
 	try {
+<<<<<<< HEAD
+		if (!process.env.JWT_SECRET_KEY)
+			return {
+				status: 500,
+				item: logError(`decode token`, 'No token encryption key found.'),
+			}
+
+		if (!token)
+			return {
+				status: 500,
+				item: logError(`decode token`, 'No token provided.'),
+			}
+=======
 		if (!process.env.JWT_SECRET_KEY) {
 			logError(`decode token`, 'No token encryption key found.')
 			return {
@@ -196,6 +272,7 @@ const decodeToken = async (token) => {
 				item: 'No token provided.',
 			}
 		}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 		const payloadFromToken = await PayloadFromToken(token)
 
@@ -206,8 +283,12 @@ const decodeToken = async (token) => {
 		}
 		return { status: payloadFromToken.status, item: payloadFromToken.item }
 	} catch (err) {
+<<<<<<< HEAD
+		return { status: 500, item: logError('decode token', err) }
+=======
 		logError('decode token', err)
 		return { status: 500, item: err }
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 
@@ -223,7 +304,15 @@ export const authenticateToken = async (req, res, next) => {
 	try {
 		const token = req.headers.authentication?.replace('Bearer ', '')
 		if (!token) {
+<<<<<<< HEAD
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Authentication required')
+=======
 			logError('authenticate token', 'Authentication required')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return res.status(401).json('Authentication required')
 		}
 		const response = await PayloadFromToken(token)
@@ -240,8 +329,12 @@ export const authenticateToken = async (req, res, next) => {
 		Log(`Token authenticated successfully. User ID: ${userFromPayload.item.id}`)
 		next()
 	} catch (err) {
+<<<<<<< HEAD
+		return res.status(500).json(logError('authenticate token', err))
+=======
 		logError('authenticate token', err)
 		return res.status(500).json(err)
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 ///////////////////////////////////
@@ -281,6 +374,8 @@ export const staffOnly = (req, res, next) => {
 	next()
 }
 
+<<<<<<< HEAD
+=======
 export const studentsNotAllowed = (req, res, next) => {
 	if (req.user.role === 'c2140ead-2d68-4be0-a711-9b8b1ceb9d8d') {
 		return res.status(401).json({ message: 'Unauthorized' })
@@ -288,6 +383,7 @@ export const studentsNotAllowed = (req, res, next) => {
 	next()
 }
 
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 export const staffNotAllowed = (req, res, next) => {
 	if (req.user.role === '9c048d7e-ef25-42fa-a496-23b0292ac96d') {
 		return res.status(401).json({ message: 'Unauthorized' })
@@ -305,6 +401,10 @@ export const staffNotAllowed = (req, res, next) => {
  */
 export const authenticateApp = (req, res, next) => {
 	const apikey = req.headers.api?.replace('X-Api-Key ', '')
+<<<<<<< HEAD
+	console.log(apikey)
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	if (apikey !== process.env.API_KEY)
 		return res.status(401).json('Unrecognized app.')
 	next()
@@ -319,6 +419,16 @@ export const authenticateApp = (req, res, next) => {
  */
 const PayloadFromToken = async (token) => {
 	try {
+<<<<<<< HEAD
+		if (!process.env.JWT_SECRET_KEY)
+			return {
+				status: 500,
+				item: logError(
+					'decode authentication token',
+					'No token encryption key provided',
+				),
+			}
+=======
 		if (!process.env.JWT_SECRET_KEY) {
 			logError(
 				'decode authentication token',
@@ -329,6 +439,7 @@ const PayloadFromToken = async (token) => {
 				item: 'No token encryption key provided',
 			}
 		}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		const data = await jwt.verify(
 			token,
 			process.env.JWT_SECRET_KEY,
@@ -344,8 +455,12 @@ const PayloadFromToken = async (token) => {
 		)
 		return data
 	} catch (err) {
+<<<<<<< HEAD
+		return { status: 500, item: logError('decode authentication token', err) }
+=======
 		logError('decode authentication token', err)
 		return { status: 500, item: err }
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 ///////////////////////////////////
@@ -365,6 +480,21 @@ const UserFromPayload = async (payload) => {
 			.limit(1)
 
 		if (!user || user.length === 0) {
+<<<<<<< HEAD
+			return {
+				status: 401,
+				item: logError(`get user from token`, `User does not exist anymore.`),
+			}
+		}
+		if (!user[0].isActive) {
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log(
+					'This account is inactive. Please contact customer support for more information.',
+				)
+=======
 			logError(
 				`get user from token`,
 				`Invalid user name or password or username doesn't exist`,
@@ -379,6 +509,7 @@ const UserFromPayload = async (payload) => {
 				`get user from token`,
 				'This account is inactive. Please contact customer support for more information.',
 			)
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return {
 				status: 401,
 				item: 'This account is inactive. Please contact customer support for more information.',
@@ -386,10 +517,20 @@ const UserFromPayload = async (payload) => {
 		}
 
 		if (user[0].isLocked) {
+<<<<<<< HEAD
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log(
+					'This account is suspended. Please contact customer support for more information.',
+				)
+=======
 			logError(
 				`get user from token`,
 				'This account is suspended. Please contact customer support for more information.',
 			)
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			return {
 				status: 401,
 				item: 'This account is suspended. Please contact customer support for more information.',
@@ -398,8 +539,12 @@ const UserFromPayload = async (payload) => {
 
 		return { status: 200, item: user[0] }
 	} catch (err) {
+<<<<<<< HEAD
+		return { status: 500, item: logError('convert jwt payload to user', err) }
+=======
 		logError('convert jwt payload to user', err)
 		return { status: 500, item: err }
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 ///////////////////////////////////
@@ -417,8 +562,12 @@ export const hashPassword = async (password) => {
 			bcryptjs.hash(password, saltRounds, (err, hash) => {
 				if (err) {
 					// Error during password comparison
+<<<<<<< HEAD
+					reject({ status: 500, item: logError('encrypt password', err) }) // Reject the promise with the error
+=======
 					logError('encrypt password', err)
 					reject({ status: 500, item: err }) // Reject the promise with the error
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 				} else {
 					// Passwords match, login successful
 					resolve({ status: 200, item: hash }) // Resolve the promise with the hash value
@@ -427,8 +576,12 @@ export const hashPassword = async (password) => {
 		})
 		return results
 	} catch (err) {
+<<<<<<< HEAD
+		return { status: 500, item: logError('encrypt password', err) }
+=======
 		logError('encrypt password', err)
 		return { status: 500, item: err }
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 ///////////////////////////////////
@@ -446,8 +599,12 @@ export const compareHash = async (plain_password, hashed_password) => {
 			bcryptjs.compare(plain_password, hashed_password, (err, result) => {
 				if (err) {
 					// Error during password comparison
+<<<<<<< HEAD
+					reject({ status: 500, item: logError('compare password', err) })
+=======
 					logError('compare password', err)
 					reject({ status: 500, item: err })
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 				} else {
 					// Return the result whether it matches
 					resolve({ status: result ? 200 : 401, item: result })
@@ -456,8 +613,12 @@ export const compareHash = async (plain_password, hashed_password) => {
 		})
 		return results
 	} catch (err) {
+<<<<<<< HEAD
+		return { status: 500, item: logError('compare password', err) }
+=======
 		logError('compare password', err)
 		return { status: 500, item: err }
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 }
 ///////////////////////////////////

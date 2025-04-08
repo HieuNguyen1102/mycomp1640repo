@@ -13,8 +13,11 @@ interface GlobalState {
 	setAuthToken: any
 	currentUser: any
 	setCurrentUser: any
+<<<<<<< HEAD
+=======
 	isLoading: boolean
 	setIsLoading: any
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 }
 
 // Create a context with a default value
@@ -26,6 +29,21 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 		localStorage.getItem('auth_token') ?? '',
 	)
 	const [currentUser, setCurrentUser] = useState<any>(null)
+<<<<<<< HEAD
+
+	const getUser = async () => {
+		const user = await getCurrentUser(authToken)
+		setCurrentUser(user)
+	}
+
+	useEffect(() => {
+		// localStorage.setItem('auth_token', '')
+		// setAuthToken('')
+		if (authToken) {
+			getUser()
+		}
+	}, [authToken])
+=======
 	const [isLoading, setIsLoading] = useState(true)
 
 	const getUser = async () => {
@@ -47,6 +65,7 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 			getUser()
 		}
 	}, [authToken, currentUser])
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 	return (
 		<GlobalStateContext.Provider
@@ -55,8 +74,11 @@ export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
 				setAuthToken,
 				currentUser,
 				setCurrentUser,
+<<<<<<< HEAD
+=======
 				isLoading,
 				setIsLoading,
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			}}
 		>
 			{children}

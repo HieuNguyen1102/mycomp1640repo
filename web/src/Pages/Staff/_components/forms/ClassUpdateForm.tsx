@@ -22,6 +22,8 @@ import { toast } from '@/Components/ui/use-toast'
 import { useNavigate } from 'react-router-dom'
 import { AddNewClass } from '@/actions/postData'
 
+<<<<<<< HEAD
+=======
 const DAYS_OF_WEEK = [
 	'Monday',
 	'Tuesday',
@@ -32,6 +34,7 @@ const DAYS_OF_WEEK = [
 	'Sunday'
 ]
 
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 type ClassUpdateFormProps = {
 	onSubmit?: (data: z.infer<typeof addClassSchema>) => void
 	isLocked?: boolean
@@ -44,8 +47,11 @@ function ClassUpdateForm({
 	initialData
 }: ClassUpdateFormProps) {
 	const { authToken } = useGlobalState()
+<<<<<<< HEAD
+=======
 	const [selectedDays, setSelectedDays] = useState<string[]>(initialData?.schedule?.days || [])
 	const [selectedTimes, setSelectedTimes] = useState<string[]>(initialData?.schedule?.times || ['09:00-10:30'])
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	const navigate = useNavigate()
 
 	const form = useForm<z.infer<typeof addClassSchema>>({
@@ -54,11 +60,16 @@ function ClassUpdateForm({
 			className: '',
 			studentId: '',
 			tutorId: '',
+<<<<<<< HEAD
+			startDate: '',
+			endDate: ''
+=======
 			description: '',
 			startDate: '',
 			endDate: '',
 			schedule: { days: [], times: [] },
 			meetingLink: ''
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		},
 	})
 
@@ -71,11 +82,15 @@ function ClassUpdateForm({
 			const formData = {
 				...values,
 				startDate: formattedStartDate,
+<<<<<<< HEAD
+				endDate: formattedEndDate
+=======
 				endDate: formattedEndDate,
 				schedule: {
 					days: selectedDays,
 					times: selectedDays.map(day => selectedTimes[0] || '09:00-10:30')
 				}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			}
 
 			if (onSubmit) {
@@ -152,6 +167,8 @@ function ClassUpdateForm({
 					/>
 					<FormField
 						control={form.control}
+<<<<<<< HEAD
+=======
 						name='description'
 						render={({ field }) => (
 							<FormItem>
@@ -279,6 +296,7 @@ function ClassUpdateForm({
 					/>
 					<FormField
 						control={form.control}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 						name='studentId'
 						render={({ field }) => (
 							<FormItem>
@@ -331,6 +349,53 @@ function ClassUpdateForm({
 							</FormItem>
 						)}
 					/>
+<<<<<<< HEAD
+					<FormField
+						control={form.control}
+						name='startDate'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Start Date</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										type="datetime-local"
+										className='h-12'
+										disabled={isLocked}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name='endDate'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>End Date</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										type="datetime-local"
+										className='h-12'
+										disabled={isLocked}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+				<Button 
+					type="submit" 
+					className="gap-2"
+					disabled={isLocked}
+				>
+					<FaSave className="h-4 w-4" />
+					Save Class
+				</Button>
+=======
 				</div>
 				{!isLocked && (
 					<Button type="submit" className="gap-2">
@@ -338,6 +403,7 @@ function ClassUpdateForm({
 						Save Class
 					</Button>
 				)}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			</form>
 		</Form>
 	)

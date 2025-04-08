@@ -8,6 +8,11 @@ export async function AddNewClass(
 	authToken: string,
 ) {
 	try {
+<<<<<<< HEAD
+		console.log('Sending class data:', formData)
+
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		const response = await fetch(`${import.meta.env.VITE_HOST}/addNewClass`, {
 			method: 'POST',
 			headers: {
@@ -19,6 +24,10 @@ export async function AddNewClass(
 		})
 
 		const data = await response.json()
+<<<<<<< HEAD
+		console.log('Response:', response.status, data)
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 		if (!response.ok) {
 			throw new Error(data.error || 'Failed to create class')
@@ -112,8 +121,19 @@ export async function reallocateClass(
 	}: { classId: string; newStudentId?: string; newTutorId?: string },
 ) {
 	try {
+<<<<<<< HEAD
+		console.log('Sending reallocation request:', {
+			classId,
+			newStudentId,
+			newTutorId,
+		})
+
+		const response = await fetch(
+			`${import.meta.env.VITE_HOST}/reallocateClass`,
+=======
 		const response = await fetch(
 			`${import.meta.env.VITE_HOST}/class/reallocate`,
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			{
 				method: 'POST',
 				headers: {
@@ -121,17 +141,35 @@ export async function reallocateClass(
 					Authentication: `Bearer ${authToken}`,
 					API: 'X-Api-Key ' + import.meta.env.VITE_APIKEY,
 				},
+<<<<<<< HEAD
+				body: JSON.stringify({ 
+					classId, 
+					tutorId: newTutorId,
+					studentId: newStudentId 
+				}),
+=======
 				body: JSON.stringify({ classId, newStudentId, newTutorId }),
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			},
 		)
 
 		const data = await response.json()
+<<<<<<< HEAD
+		console.log('Reallocation response:', data)
+
+		if (!response.ok) {
+			throw new Error(data.error || data.message || 'Failed to reallocate class')
+		}
+
+		return data
+=======
 
 		if (!response.ok) {
 			throw new Error(data.item?.error || 'Failed to reallocate class')
 		}
 
 		return data.item
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	} catch (error) {
 		console.error('Error in reallocateClass:', error)
 		throw error
