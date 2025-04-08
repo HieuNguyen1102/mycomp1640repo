@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { db } from '../config/db_config.js'
 import Class from '../schema/Class.js'
 import Tutor from '../schema/Tutor.js'
@@ -7,17 +7,13 @@ import Message from '../schema/Message.js'
 import User from '../schema/User.js'
 import Conversation from '../schema/Conversation.js'
 import { Log, logError } from '../lib/logger.js'
-import client from '../config/redis.config.js'
 
-export const getMessagesOfConversation = async ({
-	conversationId,
-	offset = 0,
-}) => {
+export const getMessagesOfConversation = async ({ conversationId }) => {
 	if (!conversationId) {
 		logError('get messages', 'no conversation id provided')
 		return { status: 401, item: 'no conversation id provided' }
 	}
-	const messages = await getMessages({ conversationId, offset })
+	const messages = await getMessages(conversationId)
 	if (messages.status === 200) Log('messages found')
 	return { status: 200, item: messages.item }
 }
@@ -129,41 +125,21 @@ export const createConversation = async (classId) => {
 	}
 }
 
-const getMessages = async ({ conversationId, offset }) => {
+const getMessages = async (conversationId) => {
 	try {
-		const key = `getMessages-conversation:${conversationId}`
-		let cached = null;
-		
-		// Only use Redis if client is available
-		if (client) {
-			cached = await client.get(key);
-		}
+		const messages = await db
+			.select()
+			.from(Message)
+			.where(eq(Message.conversationId, conversationId))
+			.orderBy(Message.sendDate)
 
-		if (!cached) {
-			const messages = await db
-				.select()
-				.from(Message)
-				.where(eq(Message.conversationId, conversationId))
-				.orderBy(desc(Message.sendDate)) // fetch the latest messages first
-			// .offset(offset)
-			// .limit(20)
-
-			if (!messages || messages.length === 0) {
-				Log('no messages found')
-				return { status: 200, item: [] }
-			}
-
-			// Only cache if Redis client is available
-			if (client) {
-				client.set(key, JSON.stringify(messages));
-			}
-			
-			Log('messages found')
-			return { status: 200, item: messages }
+		if (!messages || messages.length === 0) {
+			Log('no messages found')
+			return { status: 200, item: [] }
 		}
 
 		Log('messages found')
-		return { status: 200, item: JSON.parse(cached) }
+		return { status: 200, item: messages }
 	} catch (err) {
 		logError('get messages', err)
 		return { status: 500, item: err }
@@ -188,13 +164,6 @@ export const saveMessage = async ({
 		if (!message || message.length === 0) {
 			logError('save message', 'message not saved')
 			return { status: 401, item: 'message not saved' }
-		}
-
-		const key = `getMessages-conversation:${conversationId}`
-
-		// Only delete cache if Redis client is available
-		if (client) {
-			client.del(key);
 		}
 
 		Log('message saved')

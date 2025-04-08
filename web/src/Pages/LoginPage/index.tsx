@@ -6,31 +6,24 @@ import { useGlobalState } from '@/misc/GlobalStateContext'
 import { getCurrentUser } from '@/actions/getData'
 
 function LoginPage() {
-	const { isLoading, currentUser, authToken, setIsLoading } = useGlobalState()
+	const { currentUser } = useGlobalState()
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		try {
-			if (!isLoading && currentUser && authToken) {
-				if (currentUser.role === 'staff') {
-					navigate('/staff')
-				} else {
-					navigate('/')
-				}
+		if (currentUser) {
+			if (currentUser.role === 'staff') {
+				navigate('/staff')
+			} else {
+				navigate('/')
 			}
-		} catch (err) {
-			console.error('Error navigating:', err)
-		} finally {
-			setIsLoading(false)
 		}
-	}, [isLoading, currentUser, authToken])
+	}, [currentUser])
 
-	if (isLoading) return <div>{JSON.stringify(isLoading)}</div>
 	return (
-		<div className='flex justify-center items-center h-screen bg-purple-50'>
-			<Card>
+		<div className='flex justify-center items-center min-h-screen bg-purple-50 p-4'>
+			<Card className="w-full max-w-md">
 				<CardHeader>
-					<CardTitle className='text-3xl font-bold text-center'>
+					<CardTitle className='text-xl md:text-3xl font-bold text-center'>
 						eTutoring Login
 					</CardTitle>
 				</CardHeader>
