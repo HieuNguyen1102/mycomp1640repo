@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import React, { lazy, ReactElement } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+=======
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 import Layout from './Pages/layout'
 import LoginPage from './Pages/LoginPage'
 import HomePage from './Pages/HomePage'
@@ -10,12 +14,17 @@ import StaffLayout from './Pages/Staff/layout'
 import ReallocatePage from './Pages/Staff/Reallocate'
 import AddClass from './Pages/Staff/Class/AddClass'
 import StaffDashboardPage from './Pages/Staff/StaffDashboardPage'
+<<<<<<< HEAD
 import { GlobalStateProvider, useGlobalState } from './misc/GlobalStateContext'
 import MessagePage from './Pages/Classes/ClassPage/Message'
+=======
+import { GlobalStateProvider } from './misc/GlobalStateContext'
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 import ClassPage from './Pages/Classes/ClassPage'
 import { Toaster } from '@/Components/ui/toaster'
 import MeetingPage from './Pages/Staff/Class/MeetingPage'
 import NewMeeting from './Pages/Staff/Class/MeetingPage/NewMeeting'
+<<<<<<< HEAD
 import Schedule from './Pages/Schedule'
 
 // Root redirect component
@@ -84,12 +93,15 @@ function TutorRoute({ element }: TutorRouteProps) {
 	// If user is a tutor, render the protected component
 	return element
 }
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 function App() {
 	return (
 		<GlobalStateProvider>
 			<Router>
 				<Routes>
+<<<<<<< HEAD
 					{/* Root redirect */}
 					<Route path="/" element={<RootRedirect />} />
 
@@ -133,6 +145,61 @@ function App() {
 
 					{/* Catch-all route for 404 */}
 					<Route path='*' element={<NotFound />} />
+=======
+					<Route
+						path='*'
+						element={<NotFound />}
+					/>
+					<Route
+						index
+						path='/login'
+						element={<LoginPage />}
+					/>
+					<Route element={<Layout />}>
+						<Route
+							index
+							path='/'
+							element={<HomePage />}
+						/>
+						<Route
+							path='/dashboard/overview'
+							element={<OverViewPage />}
+						/>
+
+						<Route
+							index
+							path='/dashboard/classes'
+							element={<ClassesPage />}
+						/>
+						<Route
+							index
+							path='/dashboard/classes/:id'
+							element={<ClassPage />}
+						/>
+						<Route
+							path='/dashboard/classes/:id/meetings'
+							element={<MeetingPage />}
+						/>
+						<Route
+							path='/dashboard/classes/:id/meetings/newMeeting'
+							element={<NewMeeting />}
+						/>
+					</Route>
+					<Route element={<StaffLayout />}>
+						<Route
+							path='/staff'
+							element={<StaffDashboardPage />}
+						/>
+						<Route
+							path='/staff/classes/new'
+							element={<AddClass />}
+						/>
+						<Route
+							path='/staff/reallocate'
+							element={<ReallocatePage />}
+						/>
+					</Route>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 				</Routes>
 				<Toaster />
 			</Router>

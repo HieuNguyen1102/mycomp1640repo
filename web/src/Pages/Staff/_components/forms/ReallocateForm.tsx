@@ -15,6 +15,7 @@ import { getDataForCreatingClass } from '@/actions/getData'
 import { useGlobalState } from '@/misc/GlobalStateContext'
 import { getAllClasses } from '@/actions/getData'
 import { reallocateClass } from '@/actions/postData'
+<<<<<<< HEAD
 import { toast } from '@/Components/ui/use-toast'
 import { 
 	Select,
@@ -35,6 +36,18 @@ const reallocateSchema = z.object({
 
 function ReallocateForm() {
 	const { authToken, currentUser } = useGlobalState()
+=======
+
+// Schema for the reallocation form
+const reallocateSchema = z.object({
+	classId: z.string().min(1, 'Please select a class'),
+	newStudentId: z.string().min(1, 'Please select a new student'),
+	newTutorId: z.string().min(1, 'Please select a new tutor'),
+})
+
+function ReallocateForm() {
+	const { authToken } = useGlobalState()
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	const [classes, setClasses] = useState([])
 	const [selectedClass, setSelectedClass] = useState(null)
 	const [studentsAndTutors, setStudentsAndTutors] = useState({
@@ -42,6 +55,7 @@ function ReallocateForm() {
 		tutors: [],
 	})
 	const [isLoading, setIsLoading] = useState(true)
+<<<<<<< HEAD
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [error, setError] = useState('')
 	const [socket, setSocket] = useState<any>(null)
@@ -50,11 +64,15 @@ function ReallocateForm() {
 		changes: string[];
 		timestamp: Date | null;
 	} | null>(null)
+=======
+	const [error, setError] = useState('')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 	const form = useForm<z.infer<typeof reallocateSchema>>({
 		resolver: zodResolver(reallocateSchema),
 		defaultValues: {
 			classId: '',
+<<<<<<< HEAD
 			newStudentId: 'none',
 			newTutorId: 'none',
 		},
@@ -76,6 +94,13 @@ function ReallocateForm() {
 		}
 	}, [currentUser])
 
+=======
+			newStudentId: '',
+			newTutorId: '',
+		},
+	})
+
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	// Fetch classes and students/tutors data
 	useEffect(() => {
 		const fetchData = async () => {
@@ -85,7 +110,11 @@ function ReallocateForm() {
 
 				const [classesData, studentsAndTutorsData] = await Promise.all([
 					getAllClasses(authToken),
+<<<<<<< HEAD
 					getDataForCreatingClass(authToken)
+=======
+					getDataForCreatingClass(authToken),
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 				])
 
 				if (classesData) {
@@ -102,11 +131,14 @@ function ReallocateForm() {
 			} catch (err) {
 				console.error('Error fetching data:', err)
 				setError('Failed to load data')
+<<<<<<< HEAD
 				toast({
 					title: "Error",
 					description: "Failed to load necessary data. Please try again.",
 					variant: "destructive",
 				})
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			} finally {
 				setIsLoading(false)
 			}
@@ -126,6 +158,7 @@ function ReallocateForm() {
 
 	const onSubmit = async (values: z.infer<typeof reallocateSchema>) => {
 		try {
+<<<<<<< HEAD
 			setIsSubmitting(true)
 			setError('')
 			setSuccessDetails(null)
@@ -303,6 +336,43 @@ function ReallocateForm() {
 			</div>
 		);
 	}
+=======
+			setError('')
+			const result = await reallocateClass(authToken, values)
+
+			if (result.success) {
+				alert('Class reallocated successfully')
+				const newStudent = studentsAndTutors.students.find(
+					(student) => student.studentId === values.newStudentId,
+				)
+				const newTutor = studentsAndTutors.tutors.find(
+					(tutor) => tutor.tutorId === values.newTutorId,
+				)
+
+				setSelectedClass((prevClass) =>
+					prevClass
+						? {
+								...prevClass,
+								studentUsername: newStudent.username,
+								tutorUsername: newTutor.username,
+						  }
+						: null,
+				)
+			} else {
+				setError(result.error || 'Failed to reallocate class')
+			}
+		} catch (error) {
+			console.error('Error in form submission:', error)
+			setError(
+				error instanceof Error ? error.message : 'Failed to reallocate class',
+			)
+		}
+	}
+
+	if (isLoading) return <div>Loading...</div>
+
+	if (error) return <div className='text-red-500'>{error}</div>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 	return (
 		<Form {...form}>
@@ -311,12 +381,40 @@ function ReallocateForm() {
 				className='flex gap-6 flex-col'
 			>
 				<div className='flex gap-6 flex-col'>
+<<<<<<< HEAD
+=======
+					{/* Show current class details if a class is selected */}
+					{selectedClass && (
+						<div className='bg-gray-50 p-4 rounded-md'>
+							<h3 className='font-semibold mb-2'>Current Class Details</h3>
+							<p>Class Name: {selectedClass.className}</p>
+							<p>Current Student: {selectedClass.studentUsername}</p>
+							<p>Current Tutor: {selectedClass.tutorUsername}</p>
+							{selectedClass.description && (
+								<p>Description: {selectedClass.description}</p>
+							)}
+							{selectedClass.startDate && (
+								<p>
+									Start Date:{' '}
+									{new Date(selectedClass.startDate).toLocaleDateString()}
+								</p>
+							)}
+							{selectedClass.endDate && (
+								<p>
+									End Date:{' '}
+									{new Date(selectedClass.endDate).toLocaleDateString()}
+								</p>
+							)}
+						</div>
+					)}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 					{/* Class Selection */}
 					<FormField
 						control={form.control}
 						name='classId'
 						render={({ field }) => (
 							<FormItem>
+<<<<<<< HEAD
 								<FormLabel className="text-gray-700 font-medium">Select Class</FormLabel>
 								<FormControl>
 									<Select
@@ -343,12 +441,34 @@ function ReallocateForm() {
 											)}
 										</SelectContent>
 									</Select>
+=======
+								<FormLabel>
+									Select Class<p className='text-red-500'>*</p>
+								</FormLabel>
+								<FormControl>
+									<select
+										className='border p-4 rounded-md w-full'
+										value={field.value}
+										onChange={(e) => onClassChange(e.target.value)}
+									>
+										<option value=''>Select a class</option>
+										{classes.map((classItem: any) => (
+											<option
+												key={classItem.id}
+												value={classItem.id}
+											>
+												{classItem.className}
+											</option>
+										))}
+									</select>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 
+<<<<<<< HEAD
 					{/* Show current class details if a class is selected */}
 					{selectedClass && (
 						<div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-lg border border-purple-100">
@@ -390,12 +510,15 @@ function ReallocateForm() {
 						</div>
 					)}
 
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 					{/* New Student Selection */}
 					<FormField
 						control={form.control}
 						name='newStudentId'
 						render={({ field }) => (
 							<FormItem>
+<<<<<<< HEAD
 								<FormLabel className="text-gray-700 font-medium">New Student (Optional)</FormLabel>
 								<FormControl>
 									<Select
@@ -423,6 +546,27 @@ function ReallocateForm() {
 											)}
 										</SelectContent>
 									</Select>
+=======
+								<FormLabel>
+									New Student<p className='text-red-500'>*</p>
+								</FormLabel>
+								<FormControl>
+									<select
+										className='border p-4 rounded-md w-full'
+										value={field.value ?? ''}
+										onChange={(e) => field.onChange(e.target.value)}
+									>
+										<option value=''>Select new student</option>
+										{studentsAndTutors.students.map((student: any) => (
+											<option
+												key={student.studentId}
+												value={student.studentId}
+											>
+												{student.username}
+											</option>
+										))}
+									</select>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -435,6 +579,7 @@ function ReallocateForm() {
 						name='newTutorId'
 						render={({ field }) => (
 							<FormItem>
+<<<<<<< HEAD
 								<FormLabel className="text-gray-700 font-medium">New Tutor (Optional)</FormLabel>
 								<FormControl>
 									<Select
@@ -462,6 +607,27 @@ function ReallocateForm() {
 											)}
 										</SelectContent>
 									</Select>
+=======
+								<FormLabel>
+									New Tutor<p className='text-red-500'>*</p>
+								</FormLabel>
+								<FormControl>
+									<select
+										className='border p-4 rounded-md w-full'
+										value={field.value ?? ''}
+										onChange={(e) => field.onChange(e.target.value)}
+									>
+										<option value=''>Select new tutor</option>
+										{studentsAndTutors.tutors.map((tutor: any) => (
+											<option
+												key={tutor.tutorId}
+												value={tutor.tutorId}
+											>
+												{tutor.username}
+											</option>
+										))}
+									</select>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -469,6 +635,7 @@ function ReallocateForm() {
 					/>
 				</div>
 
+<<<<<<< HEAD
 				{error && (
 					<div className="text-red-500 bg-red-50 p-3 rounded-md border border-red-200 text-sm">
 						{error}
@@ -486,6 +653,16 @@ function ReallocateForm() {
 								Reallocating...
 							</>
 						) : 'Reallocate Class'}
+=======
+				{error && <div className='text-red-500'>{error}</div>}
+
+				<div className='self-end'>
+					<Button
+						className='bg-gradient-to-r from-purple-500 to-blue-700 cursor-pointer'
+						disabled={form.formState.isSubmitting}
+					>
+						{form.formState.isSubmitting ? 'Reallocating...' : 'Reallocate'}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 					</Button>
 				</div>
 			</form>
@@ -493,4 +670,8 @@ function ReallocateForm() {
 	)
 }
 
+<<<<<<< HEAD
 export default ReallocateForm 
+=======
+export default ReallocateForm
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5

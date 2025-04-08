@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react'
+=======
+import React, { useState } from 'react'
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 import {
   Dialog,
   DialogContent,
@@ -6,11 +10,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+<<<<<<< HEAD
+=======
+  DialogTrigger,
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 } from "@/Components/ui/dialog"
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
+<<<<<<< HEAD
 import { FaEdit, FaFile } from 'react-icons/fa'
 import { IoBookOutline } from 'react-icons/io5'
 
@@ -34,11 +43,21 @@ export interface ContentItem {
     role: string
   }
 }
+=======
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select"
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 interface UploadDialogProps {
   isOpen: boolean
   onClose: () => void
   onUpload: (data: ContentUploadData) => void
+<<<<<<< HEAD
   editingContent?: ContentItem | null
 }
 
@@ -85,10 +104,45 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload, 
     } finally {
       setIsSubmitting(false)
     }
+=======
+}
+
+export interface ContentUploadData {
+  title: string
+  type: string
+  description: string
+  file?: File
+  link?: string
+}
+
+const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload }) => {
+  const [formData, setFormData] = useState<ContentUploadData>({
+    title: '',
+    type: '',
+    description: '',
+  })
+  const [file, setFile] = useState<File | null>(null)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onUpload({
+      ...formData,
+      file: file || undefined,
+    })
+    // Reset form
+    setFormData({
+      title: '',
+      type: '',
+      description: '',
+    })
+    setFile(null)
+    onClose()
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
+<<<<<<< HEAD
       <DialogContent className="max-w-md sm:max-w-lg w-[95vw] p-4 sm:p-6 border border-gray-100 shadow-xl">
         <DialogHeader className="pb-2">
           <div className="flex items-center gap-3 mb-2">
@@ -181,6 +235,96 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload, 
                 ? (editingContent ? 'Updating...' : 'Uploading...') 
                 : (editingContent ? 'Update Content' : 'Upload Content')}
             </Button>
+=======
+      <DialogContent className="sm:max-w-[500px]">
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>Upload Content</DialogTitle>
+            <DialogDescription>
+              Add new learning materials or questions to your class.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="title" className="text-right">
+                Title
+              </Label>
+              <Input
+                id="title"
+                className="col-span-3"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="type" className="text-right">
+                Type
+              </Label>
+              <Select
+                value={formData.type}
+                onValueChange={(value) => setFormData({ ...formData, type: value })}
+                required
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select content type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Document">Document</SelectItem>
+                  <SelectItem value="Video">Video</SelectItem>
+                  <SelectItem value="Link">Link</SelectItem>
+                  <SelectItem value="Question">Question</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                className="col-span-3"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                required
+              />
+            </div>
+            {formData.type !== 'Link' ? (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="file" className="text-right">
+                  File
+                </Label>
+                <Input
+                  id="file"
+                  type="file"
+                  className="col-span-3"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  required={formData.type !== 'Link'}
+                />
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="link" className="text-right">
+                  Link
+                </Label>
+                <Input
+                  id="link"
+                  type="url"
+                  className="col-span-3"
+                  value={formData.link || ''}
+                  onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+                  required={formData.type === 'Link'}
+                  placeholder="https://"
+                />
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Upload</Button>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
           </DialogFooter>
         </form>
       </DialogContent>
@@ -188,4 +332,8 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload, 
   )
 }
 
+<<<<<<< HEAD
 export default UploadDialog
+=======
+export default UploadDialog 
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5

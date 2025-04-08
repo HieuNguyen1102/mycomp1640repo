@@ -15,6 +15,7 @@ import { newMeetingSchema } from '@/schemas/meeting'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+<<<<<<< HEAD
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
 import { z } from 'zod'
 import { FaCalendarAlt, FaVideo, FaMapMarkerAlt, FaLink, FaStickyNote, FaArrowLeft } from 'react-icons/fa'
@@ -46,11 +47,24 @@ function NewMeeting() {
 		)
 	}
 	
+=======
+import { useNavigate, useParams } from 'react-router-dom'
+import { z } from 'zod'
+
+function NewMeeting() {
+	const { id } = useParams()
+	const { authToken } = useGlobalState()
+	const navigate = useNavigate()
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	const [meeting, setMeeting] = useState({
 		classId: id ?? '',
 		meetingDate: '',
 		meetingType: 'in-person',
+<<<<<<< HEAD
 		meetingNote: '',
+=======
+		meetingNotes: '',
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		meetingLink: '',
 		location: '',
 		studentAttended: 0,
@@ -62,6 +76,7 @@ function NewMeeting() {
 	})
 
 	const onSubmit = async (values: z.infer<typeof newMeetingSchema>) => {
+<<<<<<< HEAD
 		try {
 			const response = await AddNewMeeting(values, authToken)
 			if (response) {
@@ -84,10 +99,19 @@ function NewMeeting() {
 				description: "An unexpected error occurred. Please try again.",
 				variant: "destructive",
 			})
+=======
+		const response = await AddNewMeeting(values, authToken)
+		if (response) {
+			alert('Meeting created successfully!')
+			navigate(`/dashboard/classes/${id}/meetings`)
+		} else {
+			alert('Failed to create meeting')
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		}
 	}
 
 	return (
+<<<<<<< HEAD
 		<div className='space-y-6'>
 			{/* Header with back button and title */}
 			<div className='flex items-center justify-between'>
@@ -232,11 +256,117 @@ function NewMeeting() {
 												{...field}
 												className='min-h-24 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition-all'
 												placeholder="Add details about the meeting agenda, preparation required, etc."
+=======
+		<div>
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className='p-10 flex flex-col gap-5'
+				>
+					<div className='flex flex-col gap-5'>
+						<Input
+							type='hidden'
+							{...form.register(`classId`)}
+						/>
+						<Input
+							type='number'
+							hidden
+							value={0}
+							{...form.register(`studentAttended`)}
+						/>
+						<FormField
+							control={form.control}
+							name='meetingDate'
+							render={({ field }) => (
+								<FormItem className='flex flex-col gap-2'>
+									<FormLabel>Select a date time</FormLabel>
+									<FormControl>
+										<Input
+											{...field}
+											type='datetime-local'
+											onChange={(e) => {
+												field.onChange(e.target.value)
+												setMeeting((prevMeeting) => ({
+													...prevMeeting,
+													meetingDate: e.target.value,
+												}))
+											}}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name='meetingType'
+							render={({ field }) => (
+								<FormItem className='flex flex-col gap-2'>
+									<FormLabel>Select a meeting type</FormLabel>
+									<FormControl>
+										<select
+											{...field}
+											className='border-1 rounded-md p-4'
+											onChange={(e) => {
+												field.onChange(e.target.value)
+												setMeeting((prevMeeting) => ({
+													...prevMeeting,
+													meetingType: e.target.value,
+												}))
+											}}
+										>
+											<option value='in-person'>In-person</option>
+											<option value='online'>Online</option>
+										</select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name='meetingNotes'
+							render={({ field }) => (
+								<FormItem className='flex flex-col gap-2'>
+									<FormLabel>Note</FormLabel>
+									<FormControl>
+										<Textarea
+											{...field}
+											onChange={(e) => {
+												field.onChange(e.target.value)
+												setMeeting((prevMeeting) => ({
+													...prevMeeting,
+													meetingNotes: e.target.value,
+												}))
+											}}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div hidden={meeting.meetingType === 'in-person'}>
+							<FormField
+								control={form.control}
+								name='meetingLink'
+								render={({ field }) => (
+									<FormItem className='flex flex-col gap-2'>
+										<FormLabel>Virtual meeting link</FormLabel>
+										<FormControl>
+											<Input
+												{...field}
+												type='url'
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 												onChange={(e) => {
 													field.onChange(e.target.value)
 													setMeeting((prevMeeting) => ({
 														...prevMeeting,
+<<<<<<< HEAD
 														meetingNote: e.target.value,
+=======
+														meetingLink: e.target.value,
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 													}))
 												}}
 											/>
@@ -245,6 +375,7 @@ function NewMeeting() {
 									</FormItem>
 								)}
 							/>
+<<<<<<< HEAD
 
 							{/* Conditional fields based on meeting type */}
 							<div className='grid grid-cols-1 gap-6'>
@@ -330,6 +461,43 @@ function NewMeeting() {
 					</Form>
 				</CardContent>
 			</Card>
+=======
+						</div>
+
+						<div hidden={meeting.meetingType === 'online'}>
+							<FormField
+								control={form.control}
+								name='location'
+								render={({ field }) => (
+									<FormItem className='flex flex-col gap-2'>
+										<FormLabel>Meeting location</FormLabel>
+										<FormControl>
+											<Input
+												{...field}
+												onChange={(e) => {
+													field.onChange(e.target.value)
+													setMeeting((prevMeeting) => ({
+														...prevMeeting,
+														location: e.target.value,
+													}))
+												}}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+					</div>
+					<Button
+						type='submit'
+						className='w-fit'
+					>
+						Save
+					</Button>
+				</form>
+			</Form>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		</div>
 	)
 }

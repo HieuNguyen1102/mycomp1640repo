@@ -1,6 +1,7 @@
 import express from 'express'
 import { authenticateToken } from '../middleware/auth.js'
 import { reallocateClass } from '../db/class.js'
+<<<<<<< HEAD
 import { verifyToken } from '../middleware/auth.js'
 import { verifyAPIKey } from '../middleware/apikey.js'
 import {
@@ -12,6 +13,8 @@ import {
 	updateClass,
 	deleteClass,
 } from '../db/class.js'
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 const router = express.Router()
 
@@ -36,6 +39,7 @@ router.post('/reallocate', authenticateToken, async (req, res) => {
 	}
 })
 
+<<<<<<< HEAD
 // Get all classes
 router.get('/getAllClasses', verifyAPIKey, verifyToken, async (req, res) => {
 	const result = await getAllClasses()
@@ -87,4 +91,6 @@ router.delete('/deleteClass', verifyAPIKey, verifyToken, async (req, res) => {
 	res.status(result.status).json(result)
 })
 
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 export default router 

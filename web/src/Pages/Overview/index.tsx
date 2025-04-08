@@ -1,4 +1,5 @@
 import React from 'react'
+<<<<<<< HEAD
 import { useGlobalState } from '@/misc/GlobalStateContext'
 import StudentDashboard from './StudentDashboard.tsx'
 import TutorDashboard from './TutorDashboard.tsx'
@@ -24,6 +25,11 @@ function OverViewPage() {
 
 	// For users viewing their own dashboard or staff viewing their own dashboard
 	return currentUser.role === 'tutor' ? <TutorDashboard /> : <StudentDashboard viewingUserId={userId} />
+=======
+
+function OverViewPage() {
+	return <div>OverViewPage</div>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 }
 
 export default OverViewPage

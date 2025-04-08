@@ -70,9 +70,17 @@ export const getConversation = async ({
 export const getMessages = async ({
 	token,
 	conversationId,
+<<<<<<< HEAD
 }: {
 	token: string
 	conversationId?: string | null
+=======
+	offsset,
+}: {
+	token: string
+	conversationId?: string | null
+	offset: number
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 }) => {
 	const url = `${import.meta.env.VITE_HOST}/getMessages`
 
@@ -83,7 +91,11 @@ export const getMessages = async ({
 			Authentication: `Bearer ${token}`,
 			API: 'X-Api-Key ' + import.meta.env.VITE_APIKEY,
 		},
+<<<<<<< HEAD
 		body: JSON.stringify({ conversationId }),
+=======
+		body: JSON.stringify({ conversationId, offsset }),
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 
 	const response = await fetch(url, options)
@@ -151,6 +163,7 @@ export const getClassesForUser = async ({
 			},
 		}
 
+<<<<<<< HEAD
 		console.log('Fetching classes with options:', options)
 		const response = await fetch(url, options)
 		
@@ -169,6 +182,16 @@ export const getClassesForUser = async ({
 
 		console.log('Classes response:', data)
 
+=======
+		const response = await fetch(url, options)
+		const data = await response.json()
+
+		if (!response.ok) {
+			console.error('Failed to fetch classes:', data)
+			return []
+		}
+
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		// If data is an error object, return empty array
 		if (data && data.error) {
 			console.error('Error in response:', data.error)
@@ -186,7 +209,10 @@ export const getClassesForUser = async ({
 		}
 
 		// If no valid data format is found, return empty array
+<<<<<<< HEAD
 		console.log('No valid data format found')
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		return []
 	} catch (error) {
 		console.error('Error fetching classes:', error)
@@ -206,6 +232,7 @@ export const getAllClasses = async (token: string) => {
 			},
 		}
 
+<<<<<<< HEAD
 		console.log('Fetching classes with options:', options)
 		const response = await fetch(url, options)
 		
@@ -224,6 +251,16 @@ export const getAllClasses = async (token: string) => {
 
 		console.log('Classes response:', data)
 
+=======
+		const response = await fetch(url, options)
+		const data = await response.json()
+
+		if (!response.ok) {
+			console.error('Failed to fetch classes:', data)
+			return []
+		}
+
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		// If data is an error object, return empty array
 		if (data && data.error) {
 			console.error('Error in response:', data.error)
@@ -236,8 +273,12 @@ export const getAllClasses = async (token: string) => {
 			return []
 		}
 
+<<<<<<< HEAD
 		// Return the array of classes
 		return Array.isArray(data) ? data : []
+=======
+		return data
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	} catch (error) {
 		console.error('Error fetching classes:', error)
 		return []
@@ -263,6 +304,7 @@ export const getMeetingsOfAClass = async ({
 		}
 
 		const response = await fetch(url, options)
+<<<<<<< HEAD
 		
 		if (!response.ok) {
 			console.error('Failed to fetch meetings:', response.status)
@@ -591,3 +633,30 @@ export const deleteComment = async ({
 		return null
 	}
 }
+=======
+		const data = await response.json()
+
+		if (!response.ok) {
+			console.error('Failed to fetch classes:', data)
+			return []
+		}
+
+		// If data is an error object, return empty array
+		if (data && data.error) {
+			console.error('Error in response:', data.error)
+			return []
+		}
+
+		// If data is null/undefined, return empty array
+		if (!data) {
+			console.log('No data returned')
+			return []
+		}
+
+		return data
+	} catch (error) {
+		console.error('Error fetching classes:', error)
+		return []
+	}
+}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5

@@ -7,7 +7,10 @@ import { toast } from '@/Components/ui/use-toast'
 import { useGlobalState } from '@/misc/GlobalStateContext'
 import { AddNewClass } from '@/actions/postData'
 import { useNavigate } from 'react-router-dom'
+<<<<<<< HEAD
 import { Loader2 } from 'lucide-react'
+=======
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 type ClassData = {
 	id: string
@@ -121,6 +124,7 @@ function AddClass() {
 	}
 
 	return (
+<<<<<<< HEAD
 		<div className="p-6 bg-gray-50 min-h-screen">
 			<div className="max-w-4xl mx-auto space-y-6">
 				<div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
@@ -248,6 +252,96 @@ function AddClass() {
 						</div>
 					</div>
 				)}
+=======
+		<div className="space-y-6 max-w-4xl mx-auto">
+			<div className="flex justify-between items-center">
+				<h1 className="text-2xl font-bold">Add New Classes</h1>
+				<div className="flex gap-2">
+					<Button 
+						onClick={addClass}
+						className="gap-2"
+					>
+						<FaPlus className="h-4 w-4" />
+						Add Another Class
+					</Button>
+					<Button 
+						onClick={saveAllClasses}
+						className="gap-2"
+						disabled={isSaving || classes.some(c => !c.isLocked)}
+					>
+						<FaSave className="h-4 w-4" />
+						Save All Classes
+					</Button>
+				</div>
+			</div>
+
+			<div className="space-y-4">
+				{classes.map((classItem) => (
+					<Card key={classItem.id} className={`relative transition-all duration-200 ${classItem.isLocked ? 'bg-gray-50' : ''}`}>
+						<CardHeader className="flex flex-row items-center justify-between py-3">
+							<div className="flex items-center gap-4">
+								<Button
+									variant="ghost"
+									size="sm"
+									className="p-0 h-8 w-8"
+									onClick={() => toggleExpand(classItem.id)}
+								>
+									{classItem.isExpanded ? (
+										<FaMinus className="h-4 w-4" />
+									) : (
+										<FaPlus className="h-4 w-4" />
+									)}
+								</Button>
+								<div className="flex items-center gap-2">
+									<CardTitle className="text-lg">
+										Class #{classItem.id}
+									</CardTitle>
+									{classItem.isLocked && (
+										<FaCheck className="h-4 w-4 text-green-500" />
+									)}
+									{classItem.data && (
+										<span className="text-sm text-gray-500">
+											({classItem.data.className || 'Unnamed Class'})
+										</span>
+									)}
+								</div>
+							</div>
+							<div className="flex gap-2">
+								{classItem.isLocked ? (
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() => unlockForm(classItem.id)}
+										className="gap-2"
+									>
+										<FaLockOpen className="h-4 w-4" />
+										Unlock
+									</Button>
+								) : (
+									<FaLock className="h-4 w-4 text-gray-400" />
+								)}
+								<Button
+									variant="outline"
+									size="sm"
+									className="text-red-500 hover:text-red-700"
+									onClick={() => removeClass(classItem.id)}
+								>
+									<FaTrash className="h-4 w-4" />
+								</Button>
+							</div>
+						</CardHeader>
+						{classItem.isExpanded && (
+							<CardContent>
+								<ClassUpdateForm 
+									onSubmit={(data) => handleFormSubmit(classItem.id, data)}
+									isLocked={classItem.isLocked}
+									initialData={classItem.data}
+								/>
+							</CardContent>
+						)}
+					</Card>
+				))}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			</div>
 		</div>
 	)

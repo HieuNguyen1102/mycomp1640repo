@@ -22,6 +22,19 @@ import { toast } from '@/Components/ui/use-toast'
 import { useNavigate } from 'react-router-dom'
 import { AddNewClass } from '@/actions/postData'
 
+<<<<<<< HEAD
+=======
+const DAYS_OF_WEEK = [
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+	'Saturday',
+	'Sunday'
+]
+
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 type ClassUpdateFormProps = {
 	onSubmit?: (data: z.infer<typeof addClassSchema>) => void
 	isLocked?: boolean
@@ -34,6 +47,11 @@ function ClassUpdateForm({
 	initialData
 }: ClassUpdateFormProps) {
 	const { authToken } = useGlobalState()
+<<<<<<< HEAD
+=======
+	const [selectedDays, setSelectedDays] = useState<string[]>(initialData?.schedule?.days || [])
+	const [selectedTimes, setSelectedTimes] = useState<string[]>(initialData?.schedule?.times || ['09:00-10:30'])
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	const navigate = useNavigate()
 
 	const form = useForm<z.infer<typeof addClassSchema>>({
@@ -42,8 +60,16 @@ function ClassUpdateForm({
 			className: '',
 			studentId: '',
 			tutorId: '',
+<<<<<<< HEAD
 			startDate: '',
 			endDate: ''
+=======
+			description: '',
+			startDate: '',
+			endDate: '',
+			schedule: { days: [], times: [] },
+			meetingLink: ''
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 		},
 	})
 
@@ -56,7 +82,15 @@ function ClassUpdateForm({
 			const formData = {
 				...values,
 				startDate: formattedStartDate,
+<<<<<<< HEAD
 				endDate: formattedEndDate
+=======
+				endDate: formattedEndDate,
+				schedule: {
+					days: selectedDays,
+					times: selectedDays.map(day => selectedTimes[0] || '09:00-10:30')
+				}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			}
 
 			if (onSubmit) {
@@ -133,6 +167,136 @@ function ClassUpdateForm({
 					/>
 					<FormField
 						control={form.control}
+<<<<<<< HEAD
+=======
+						name='description'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Description</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										className='h-12'
+										placeholder='Enter class description'
+										disabled={isLocked}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name='startDate'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Start Date</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										type="datetime-local"
+										className='h-12'
+										disabled={isLocked}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name='endDate'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>End Date</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										type="datetime-local"
+										className='h-12'
+										disabled={isLocked}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<div className="space-y-4">
+						<FormLabel>Schedule</FormLabel>
+						<div className="space-y-2">
+							<p className="text-sm text-gray-500">Select Days</p>
+							<div className="flex flex-wrap gap-2">
+								{DAYS_OF_WEEK.map((day) => (
+									<Button
+										key={day}
+										type="button"
+										disabled={isLocked}
+										className={`px-3 py-1 rounded ${
+											selectedDays.includes(day)
+												? 'bg-blue-500 text-white'
+												: 'bg-gray-200'
+										}`}
+										onClick={() => {
+											setSelectedDays(prev =>
+												prev.includes(day)
+													? prev.filter(d => d !== day)
+													: [...prev, day]
+											)
+										}}
+									>
+										{day}
+									</Button>
+								))}
+							</div>
+						</div>
+						<div className="space-y-2">
+							<p className="text-sm text-gray-500">Class Time</p>
+							<Input
+								type="time"
+								className="w-32"
+								disabled={isLocked}
+								value={selectedTimes[0]?.split('-')[0] ?? '09:00'}
+								onChange={(e) => {
+									const startTime = e.target.value
+									const endTime = selectedTimes[0]?.split('-')[1] ?? '10:30'
+									setSelectedTimes([`${startTime}-${endTime}`])
+								}}
+							/>
+							<span className="mx-2">to</span>
+							<Input
+								type="time"
+								className="w-32"
+								disabled={isLocked}
+								value={selectedTimes[0]?.split('-')[1] ?? '10:30'}
+								onChange={(e) => {
+									const startTime = selectedTimes[0]?.split('-')[0] ?? '09:00'
+									const endTime = e.target.value
+									setSelectedTimes([`${startTime}-${endTime}`])
+								}}
+							/>
+						</div>
+					</div>
+					<FormField
+						control={form.control}
+						name='meetingLink'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Meeting Link</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										className='h-12'
+										placeholder='https://meet.google.com/...'
+										disabled={isLocked}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 						name='studentId'
 						render={({ field }) => (
 							<FormItem>
@@ -185,6 +349,7 @@ function ClassUpdateForm({
 							</FormItem>
 						)}
 					/>
+<<<<<<< HEAD
 					<FormField
 						control={form.control}
 						name='startDate'
@@ -230,6 +395,15 @@ function ClassUpdateForm({
 					<FaSave className="h-4 w-4" />
 					Save Class
 				</Button>
+=======
+				</div>
+				{!isLocked && (
+					<Button type="submit" className="gap-2">
+						<FaSave className="h-4 w-4" />
+						Save Class
+					</Button>
+				)}
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			</form>
 		</Form>
 	)

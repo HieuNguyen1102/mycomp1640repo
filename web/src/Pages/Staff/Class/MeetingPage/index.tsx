@@ -8,6 +8,7 @@ import { meetingAttendanceSchema } from '@/schemas/meeting'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+<<<<<<< HEAD
 import { Link, useParams, useNavigate, Navigate } from 'react-router-dom'
 import { z } from 'zod'
 import { FaCalendarAlt, FaVideo, FaMapMarkerAlt, FaClock, FaExternalLinkAlt, FaPlus, FaCheck, FaTimes } from 'react-icons/fa'
@@ -114,13 +115,27 @@ function MeetingPage() {
 			</div>
 		)
 	}
+=======
+import { Link, useParams } from 'react-router-dom'
+import { z } from 'zod'
+
+function MeetingPage() {
+	const [meetings, setMeetings] = useState([])
+	const { id } = useParams()
+	const { authToken, currentUser } = useGlobalState()
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 
 	const form = useForm<z.infer<typeof meetingAttendanceSchema>>({
 		resolver: zodResolver(meetingAttendanceSchema),
 		defaultValues: {
 			meetings: meetings.map((meeting) => ({
+<<<<<<< HEAD
 				meetingId: meeting.meetingId,
 				status: meeting.studentAttended ?? 0,
+=======
+				meetingId: (meeting as MeetingType).meetingId,
+				status: (meeting as MeetingType).studentAttended ?? 0,
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 			})),
 		},
 	})
@@ -129,6 +144,7 @@ function MeetingPage() {
 		meetings.forEach((meeting, i) => {
 			form.setValue(
 				`meetings.${i}.status`,
+<<<<<<< HEAD
 				meeting.studentAttended || 0,
 			)
 		})
@@ -170,12 +186,31 @@ function MeetingPage() {
 				variant: "destructive",
 			})
 		}
+=======
+				(meeting as MeetingType).studentAttended || 0,
+			)
+		})
+	}, [meetings])
+	const getMeetings = async () => {
+		const response = await getMeetingsOfAClass({
+			classId: id ?? '',
+			token: authToken,
+		})
+
+		setMeetings(response)
+	}
+
+	const onSubmit = async (values: z.infer<typeof meetingAttendanceSchema>) => {
+		const response = await updateMeetingAttendance(values, authToken)
+		alert(response)
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	}
 
 	useEffect(() => {
 		getMeetings()
 	}, [])
 
+<<<<<<< HEAD
 	// Function to format date for display
 	const formatMeetingDate = (dateString: string) => {
 		try {
@@ -253,10 +288,20 @@ function MeetingPage() {
 				>
 					<Link to={`/dashboard/classes/${id}/meetings/new`} className="flex items-center gap-2">
 						<FaPlus className="h-3 w-3" /> New Meeting
+=======
+	return (
+		<div className='p-6 bg-gray-100 min-h-screen'>
+			<div className='flex flex-row justify-between'>
+				<h1 className='text-3xl font-bold mb-6'>Meeting records</h1>
+				<Button>
+					<Link to={`/dashboard/classes/${id}/meetings/newMeeting`}>
+						New Meeting
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 					</Link>
 				</Button>
 			</div>
 
+<<<<<<< HEAD
 			{/* All Meetings Section */}
 			<div className='bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200'>
 				<div className='flex items-center gap-2 p-4 border-b border-gray-200'>
@@ -400,6 +445,113 @@ function MeetingPage() {
 							</div>
 						</form>
 					</Form>
+=======
+			{/* Meetings Table */}
+
+			<div className='bg-white p-6 rounded-lg shadow-md'>
+				<Form {...form}>
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className='overflow-x-auto'
+					>
+						<table className='w-full border-collapse'>
+							<thead>
+								<tr className='bg-gray-200'>
+									<th className='p-3 text-left'>Date & Time</th>
+									<th className='p-3 text-left'>Type</th>
+									<th className='p-3 text-left'>Notes</th>
+									<th className='p-3 text-left'>Meeting Link</th>
+									<th className='p-3 text-left'>Location</th>
+									<th className='p-3 text-left'>Attended</th>
+								</tr>
+							</thead>
+							<tbody>
+								{meetings.map((meeting, i) => (
+									<tr
+										key={i}
+										className='border-t'
+									>
+										<td className='p-3'>
+											{(meeting as MeetingType).meetingDate}
+										</td>
+										<td className='p-3 capitalize'>
+											{(meeting as MeetingType).meetingType}
+										</td>
+										<td className='p-3'>
+											{(meeting as MeetingType).meetingNotes || 'N/A'}
+										</td>
+										<td className='p-3'>
+											{(meeting as MeetingType).meetingType === 'online' ? (
+												<a
+													href={(meeting as MeetingType).meetingLink}
+													target='_blank'
+													rel='noopener noreferrer'
+													className='text-blue-600 underline'
+												>
+													Join
+												</a>
+											) : (
+												'N/A'
+											)}
+										</td>
+										<td className='p-3'>
+											{(meeting as MeetingType).location || 'N/A'}
+										</td>
+										{currentUser.role === 'tutor' && (
+											<td className='p-3'>
+												<Input
+													type='hidden'
+													value={(meeting as MeetingType).meetingId}
+													{...form.register(`meetings.${i}.meetingId`)}
+												/>
+												<FormField
+													control={form.control}
+													name={`meetings.${i}.status`}
+													render={({ field }) => (
+														<select
+															className='border-1 rounded-md p-2'
+															value={field.value ?? 0}
+															onChange={(e) => {
+																field.onChange(Number(e.target.value))
+															}}
+														>
+															<option value={0}>Not yet</option>
+															<option value={1}>Attended</option>
+															<option value={2}>Absent</option>
+														</select>
+													)}
+												/>
+											</td>
+										)}
+										<td>
+											{currentUser.role === 'student' &&
+												(meetings[i].studentAttended === 0 ? (
+													<p className='text-yellow-500'>Not yet</p>
+												) : meetings[i].studentAttended === 1 ? (
+													<p className='text-green-500'>Attended</p>
+												) : (
+													<p className='text-red-500'>Absent</p>
+												))}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+						{currentUser.role === 'tutor' && (
+							<Button
+								type='submit'
+								className='w-fit'
+							>
+								Save
+							</Button>
+						)}
+					</form>
+				</Form>
+				{meetings.length === 0 && (
+					<div className='bg-white p-6 rounded-lg shadow-md flex justify-center'>
+						<p className='text-gray-500'>No meetings found.</p>
+					</div>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 				)}
 			</div>
 		</div>

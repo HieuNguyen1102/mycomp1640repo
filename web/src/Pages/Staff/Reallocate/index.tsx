@@ -4,6 +4,7 @@ import ReallocateForm from '../_components/forms/ReallocateForm'
 
 function ReallocatePage() {
 	return (
+<<<<<<< HEAD
 		<div className="p-6 bg-gray-50 min-h-screen">
 			<div className="max-w-4xl mx-auto">
 				<div className="mb-6">
@@ -24,6 +25,16 @@ function ReallocatePage() {
 				</Card>
 			</div>
 		</div>
+=======
+		<Card>
+			<CardHeader>
+				<CardTitle className='text-xl'>Reallocate Class</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<ReallocateForm />
+			</CardContent>
+		</Card>
+>>>>>>> 57756ee52d1b0a1a0410c6bead949a5fb6a450e5
 	)
 }
 
