@@ -11,33 +11,21 @@ import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/Components/ui/select"
-import { FaEdit, FaFile, FaVideo, FaLink, FaQuestion } from 'react-icons/fa'
+import { FaEdit, FaFile } from 'react-icons/fa'
 import { IoBookOutline } from 'react-icons/io5'
 
 export interface ContentUploadData {
   title: string
   description: string
-  type: string
   file: File
-  link?: string
 }
 
 export interface ContentItem {
   id: string
   title: string
-  type: string
   duration?: string
-  icon: any
   description: string
   date: string
-  link?: string
   fileUrl?: string
   fileName?: string
   ownerId?: string
@@ -57,33 +45,25 @@ interface UploadDialogProps {
 const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload, editingContent }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [type, setType] = useState('Document')
   const [file, setFile] = useState<File | null>(null)
-  const [link, setLink] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (editingContent) {
       setTitle(editingContent.title)
       setDescription(editingContent.description)
-      setType(editingContent.type)
-      if (editingContent.link) {
-        setLink(editingContent.link)
-      }
     } else {
       // Reset form when not editing
       setTitle('')
       setDescription('')
-      setType('Document')
       setFile(null)
-      setLink('')
     }
   }, [editingContent])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!file && !link) {
-      alert('Please select a file or provide a link')
+    if (!file) {
+      alert('Please select a file')
       return
     }
 
@@ -92,17 +72,13 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload, 
       await onUpload({
         title,
         description,
-        type,
         file: file!,
-        link
       })
       
       // Reset form
       setTitle('')
       setDescription('')
-      setType('Document')
       setFile(null)
-      setLink('')
       onClose()
     } catch (error) {
       console.error('Error uploading:', error)
@@ -160,79 +136,30 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload, 
             />
           </div>
           <div>
-            <Label htmlFor="type" className="text-xs md:text-sm font-medium text-gray-700">Content Type</Label>
-            <Select value={type} onValueChange={setType}>
-              <SelectTrigger className="mt-1 text-sm h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500">
-                <SelectValue placeholder="Select content type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Document">
-                  <div className="flex items-center gap-2">
-                    <FaFile className="h-3.5 w-3.5 text-purple-600" />
-                    <span>Document</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="Video">
-                  <div className="flex items-center gap-2">
-                    <FaVideo className="h-3.5 w-3.5 text-red-600" />
-                    <span>Video</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="Link">
-                  <div className="flex items-center gap-2">
-                    <FaLink className="h-3.5 w-3.5 text-blue-600" />
-                    <span>Link</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="Question">
-                  <div className="flex items-center gap-2">
-                    <FaQuestion className="h-3.5 w-3.5 text-amber-600" />
-                    <span>Question</span>
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          {type === 'Link' ? (
-            <div>
-              <Label htmlFor="link" className="text-xs md:text-sm font-medium text-gray-700">Link URL</Label>
+            <Label htmlFor="file" className="text-xs md:text-sm font-medium text-gray-700">File</Label>
+            <div className="mt-1 border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-purple-300 transition-colors">
               <Input
-                id="link"
-                type="url"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
-                required={type === 'Link'}
-                className="mt-1 text-sm h-9 md:h-10 focus:border-blue-500 focus:ring-blue-500"
-                placeholder="https://example.com"
+                id="file"
+                type="file"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                required={!editingContent || (editingContent && !editingContent.fileUrl)}
+                className="hidden"
               />
-            </div>
-          ) : (
-            <div>
-              <Label htmlFor="file" className="text-xs md:text-sm font-medium text-gray-700">File</Label>
-              <div className="mt-1 border-2 border-dashed border-gray-200 rounded-lg p-4 text-center hover:border-purple-300 transition-colors">
-                <Input
-                  id="file"
-                  type="file"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  required={!editingContent || (editingContent && !editingContent.fileUrl)}
-                  className="hidden"
-                />
-                <label htmlFor="file" className="cursor-pointer">
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="p-2 bg-purple-50 rounded-full">
-                      <FaFile className="h-4 w-4 text-purple-500" />
-                    </div>
-                    <span className="text-sm font-medium text-purple-600">
-                      {file ? file.name : 'Click to select a file'}
-                    </span>
-                    <p className="text-xs text-gray-500">
-                      {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : 'Max file size: 10MB'}
-                    </p>
+              <label htmlFor="file" className="cursor-pointer">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="p-2 bg-purple-50 rounded-full">
+                    <FaFile className="h-4 w-4 text-purple-500" />
                   </div>
-                </label>
-              </div>
+                  <span className="text-sm font-medium text-purple-600">
+                    {file ? file.name : 'Click to select a file'}
+                  </span>
+                  <p className="text-xs text-gray-500">
+                    {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : 'Max file size: 10MB'}
+                  </p>
+                </div>
+              </label>
             </div>
-          )}
+          </div>
           
           <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-2"></div>
           
@@ -261,4 +188,4 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose, onUpload, 
   )
 }
 
-export default UploadDialog 
+export default UploadDialog
