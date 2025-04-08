@@ -43,13 +43,12 @@ const generateToken = async (user) => {
 		// No secret key = bye bye
 		const secretKey = process.env.JWT_SECRET_KEY
 		if (!secretKey) {
-			logError(
-				'generate an authentication token',
-				'No token encryption secret key was found.',
-			)
 			return {
 				status: 500,
-				item: 'No token encryption secret key was found.',
+				item: logError(
+					'generate an authentication token',
+					'No token encryption secret key was found.',
+				),
 			}
 		}
 
@@ -81,10 +80,9 @@ const generateToken = async (user) => {
 			},
 		}
 	} catch (err) {
-		logError('generate an authentication token', err)
 		return {
 			status: 500,
-			item: err,
+			item: logError('generate an authentication token', err),
 		}
 	}
 }
@@ -110,8 +108,7 @@ export const Login = async (req, res) => {
 
 		return { status: token.status, item: token.item }
 	} catch (err) {
-		logError('login', err)
-		return { status: 500, item: err }
+		return { status: 500, item: logError('login', err) }
 	}
 }
 ///////////////////////////////////
@@ -127,7 +124,11 @@ export const Login = async (req, res) => {
 const ValidateInputLogin = async (req, res) => {
 	try {
 		if (!req.body) {
-			logError('validate login credentials', 'No body sent.')
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('No body sent.')
 			return {
 				status: 401,
 				item: 'No body sent.',
@@ -135,14 +136,22 @@ const ValidateInputLogin = async (req, res) => {
 		}
 		if (!req.body.username) {
 			// If your system uses username to login, change it to username
-			logError('validate login credentials', 'Please enter a username.')
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Please enter a username.')
 			return {
 				status: 401,
 				item: 'Please enter a username.',
 			}
 		}
 		if (!req.body.password) {
-			logError('validate login credentials', 'Please enter a password.')
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Please enter a password.')
 			return {
 				status: 401,
 				item: 'Please enter a password.',
@@ -157,7 +166,11 @@ const ValidateInputLogin = async (req, res) => {
 				.limit(1)
 		)[0]
 		if (!user) {
-			logError('validate login credentials', 'Invalid username or password.')
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Invalid username or password.')
 			return {
 				status: 401,
 				item: 'Invalid username or password.',
@@ -165,7 +178,11 @@ const ValidateInputLogin = async (req, res) => {
 		}
 		const compare_hash = await compareHash(req.body.password, user.password)
 		if (compare_hash && compare_hash.status !== 200) {
-			logError('validate login credentials', 'Invalid username or password.')
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Invalid username or password.')
 			return {
 				status: 401,
 				item: 'Invalid username or password.',
@@ -173,29 +190,24 @@ const ValidateInputLogin = async (req, res) => {
 		}
 		return { status: 200, item: user }
 	} catch (err) {
-		logError('validate login credentials', err)
-		return { status: 500, item: err }
+		return { status: 500, item: logError('validate login credentials', err) }
 	}
 }
 ///////////////////////////////////
 
 const decodeToken = async (token) => {
 	try {
-		if (!process.env.JWT_SECRET_KEY) {
-			logError(`decode token`, 'No token encryption key found.')
+		if (!process.env.JWT_SECRET_KEY)
 			return {
 				status: 500,
-				item: 'No token encryption key found.',
+				item: logError(`decode token`, 'No token encryption key found.'),
 			}
-		}
 
-		if (!token) {
-			logError(`decode token`, 'No token provided.')
+		if (!token)
 			return {
 				status: 500,
-				item: 'No token provided.',
+				item: logError(`decode token`, 'No token provided.'),
 			}
-		}
 
 		const payloadFromToken = await PayloadFromToken(token)
 
@@ -206,8 +218,7 @@ const decodeToken = async (token) => {
 		}
 		return { status: payloadFromToken.status, item: payloadFromToken.item }
 	} catch (err) {
-		logError('decode token', err)
-		return { status: 500, item: err }
+		return { status: 500, item: logError('decode token', err) }
 	}
 }
 
@@ -223,7 +234,11 @@ export const authenticateToken = async (req, res, next) => {
 	try {
 		const token = req.headers.authentication?.replace('Bearer ', '')
 		if (!token) {
-			logError('authenticate token', 'Authentication required')
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
+			)
+				console.log('Authentication required')
 			return res.status(401).json('Authentication required')
 		}
 		const response = await PayloadFromToken(token)
@@ -240,8 +255,7 @@ export const authenticateToken = async (req, res, next) => {
 		Log(`Token authenticated successfully. User ID: ${userFromPayload.item.id}`)
 		next()
 	} catch (err) {
-		logError('authenticate token', err)
-		return res.status(500).json(err)
+		return res.status(500).json(logError('authenticate token', err))
 	}
 }
 ///////////////////////////////////
@@ -281,13 +295,6 @@ export const staffOnly = (req, res, next) => {
 	next()
 }
 
-export const studentsNotAllowed = (req, res, next) => {
-	if (req.user.role === 'c2140ead-2d68-4be0-a711-9b8b1ceb9d8d') {
-		return res.status(401).json({ message: 'Unauthorized' })
-	}
-	next()
-}
-
 export const staffNotAllowed = (req, res, next) => {
 	if (req.user.role === '9c048d7e-ef25-42fa-a496-23b0292ac96d') {
 		return res.status(401).json({ message: 'Unauthorized' })
@@ -305,6 +312,7 @@ export const staffNotAllowed = (req, res, next) => {
  */
 export const authenticateApp = (req, res, next) => {
 	const apikey = req.headers.api?.replace('X-Api-Key ', '')
+	console.log(apikey)
 	if (apikey !== process.env.API_KEY)
 		return res.status(401).json('Unrecognized app.')
 	next()
@@ -319,16 +327,14 @@ export const authenticateApp = (req, res, next) => {
  */
 const PayloadFromToken = async (token) => {
 	try {
-		if (!process.env.JWT_SECRET_KEY) {
-			logError(
-				'decode authentication token',
-				'No token encryption key provided',
-			)
+		if (!process.env.JWT_SECRET_KEY)
 			return {
 				status: 500,
-				item: 'No token encryption key provided',
+				item: logError(
+					'decode authentication token',
+					'No token encryption key provided',
+				),
 			}
-		}
 		const data = await jwt.verify(
 			token,
 			process.env.JWT_SECRET_KEY,
@@ -344,8 +350,7 @@ const PayloadFromToken = async (token) => {
 		)
 		return data
 	} catch (err) {
-		logError('decode authentication token', err)
-		return { status: 500, item: err }
+		return { status: 500, item: logError('decode authentication token', err) }
 	}
 }
 ///////////////////////////////////
@@ -365,20 +370,19 @@ const UserFromPayload = async (payload) => {
 			.limit(1)
 
 		if (!user || user.length === 0) {
-			logError(
-				`get user from token`,
-				`Invalid user name or password or username doesn't exist`,
-			)
 			return {
 				status: 401,
-				item: `Invalid user name or password or username doesn't exist`,
+				item: logError(`get user from token`, `User does not exist anymore.`),
 			}
 		}
 		if (!user[0].isActive) {
-			logError(
-				`get user from token`,
-				'This account is inactive. Please contact customer support for more information.',
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
 			)
+				console.log(
+					'This account is inactive. Please contact customer support for more information.',
+				)
 			return {
 				status: 401,
 				item: 'This account is inactive. Please contact customer support for more information.',
@@ -386,10 +390,13 @@ const UserFromPayload = async (payload) => {
 		}
 
 		if (user[0].isLocked) {
-			logError(
-				`get user from token`,
-				'This account is suspended. Please contact customer support for more information.',
+			if (
+				process.env.NODE_ENV !== 'production' &&
+				process.env.NODE_ENV !== 'test'
 			)
+				console.log(
+					'This account is suspended. Please contact customer support for more information.',
+				)
 			return {
 				status: 401,
 				item: 'This account is suspended. Please contact customer support for more information.',
@@ -398,8 +405,7 @@ const UserFromPayload = async (payload) => {
 
 		return { status: 200, item: user[0] }
 	} catch (err) {
-		logError('convert jwt payload to user', err)
-		return { status: 500, item: err }
+		return { status: 500, item: logError('convert jwt payload to user', err) }
 	}
 }
 ///////////////////////////////////
@@ -417,8 +423,7 @@ export const hashPassword = async (password) => {
 			bcryptjs.hash(password, saltRounds, (err, hash) => {
 				if (err) {
 					// Error during password comparison
-					logError('encrypt password', err)
-					reject({ status: 500, item: err }) // Reject the promise with the error
+					reject({ status: 500, item: logError('encrypt password', err) }) // Reject the promise with the error
 				} else {
 					// Passwords match, login successful
 					resolve({ status: 200, item: hash }) // Resolve the promise with the hash value
@@ -427,8 +432,7 @@ export const hashPassword = async (password) => {
 		})
 		return results
 	} catch (err) {
-		logError('encrypt password', err)
-		return { status: 500, item: err }
+		return { status: 500, item: logError('encrypt password', err) }
 	}
 }
 ///////////////////////////////////
@@ -446,8 +450,7 @@ export const compareHash = async (plain_password, hashed_password) => {
 			bcryptjs.compare(plain_password, hashed_password, (err, result) => {
 				if (err) {
 					// Error during password comparison
-					logError('compare password', err)
-					reject({ status: 500, item: err })
+					reject({ status: 500, item: logError('compare password', err) })
 				} else {
 					// Return the result whether it matches
 					resolve({ status: result ? 200 : 401, item: result })
@@ -456,8 +459,7 @@ export const compareHash = async (plain_password, hashed_password) => {
 		})
 		return results
 	} catch (err) {
-		logError('compare password', err)
-		return { status: 500, item: err }
+		return { status: 500, item: logError('compare password', err) }
 	}
 }
 ///////////////////////////////////
