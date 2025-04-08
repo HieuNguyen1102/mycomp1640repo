@@ -1,0 +1,116 @@
+import React from 'react'
+import { FaHouse, FaChartLine } from 'react-icons/fa6'
+import { FaBookOpenReader } from 'react-icons/fa6'
+import MenuButton from '@/Components/MenuButton'
+import { FaGear } from 'react-icons/fa6'
+import { FaRightFromBracket } from 'react-icons/fa6'
+import { Link, useNavigate } from 'react-router-dom'
+import { useGlobalState } from '@/misc/GlobalStateContext'
+import { LogoutAPI } from '@/actions/postData'
+import { IoMenu } from 'react-icons/io5'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from './ui/dropdown-menu'
+
+function StaffSidebar() {
+	const { currentUser, setAuthToken, setCurrentUser } = useGlobalState()
+	const navigate = useNavigate()
+
+	const handleLogout = async () => {
+		const response = await LogoutAPI({ setAuthToken, setCurrentUser })
+		if (!response.error) {
+			navigate('/login')
+		}
+	}
+
+	return (
+		<>
+			<div className='flex sm:flex-row md:flex-col gap-2 p-5 items-center md:items-start justify-between md:justify-start w-full'>
+				<h1 className='text-2xl text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-700 font-bold text-center items-center'>
+					<Link to='/staff'>eTutoring - Staff</Link>
+				</h1>
+				<div className='hidden md:flex flex-col gap-4'>
+					<br />
+					<MenuButton href='/staff'>
+						<FaChartLine className='text-gray-600 h-5 w-5' />{' '}
+						<p className='text-sm'>Dashboard</p>
+					</MenuButton>
+					<MenuButton href='/staff/classes/new'>
+						<FaHouse className='text-gray-600 h-5 w-5' />{' '}
+						<p className='text-sm'>Add a new class</p>
+					</MenuButton>
+					<MenuButton href='/staff/reallocate'>
+						<FaBookOpenReader className='text-gray-600 h-5 w-5' />{' '}
+						<p className='text-sm'>Reallocate student(s)</p>
+					</MenuButton>
+				</div>
+				<div className='flex md:hidden'>
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<IoMenu size={35} />
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem>
+								<MenuButton href='/staff'>
+									<FaChartLine className='text-gray-600 h-5 w-5' />{' '}
+									<p className='text-sm'>Dashboard</p>
+								</MenuButton>
+							</DropdownMenuItem>
+							<DropdownMenuItem>
+								<MenuButton href='/staff/classes/new'>
+									<FaHouse className='text-gray-600 h-5 w-5' />{' '}
+									<p className='text-sm'>Add a new class</p>
+								</MenuButton>
+							</DropdownMenuItem>
+							<DropdownMenuItem>
+								<MenuButton href='/staff/reallocate'>
+									<FaBookOpenReader className='text-gray-600 h-5 w-5' />{' '}
+									<p className='text-sm'>Reallocate student(s)</p>
+								</MenuButton>
+							</DropdownMenuItem>
+							<DropdownMenuSeparator />
+							<DropdownMenuLabel>
+								<div className='flex flex-row gap-4 align-middle items-center justify-around'>
+									<h4 className='text-sm font-semibold'>
+										{currentUser?.username}
+									</h4>
+									<button onClick={handleLogout}>Logout</button>
+								</div>
+							</DropdownMenuLabel>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
+			</div>
+			<div className='fixed bottom-0 border border-l-0 border-r-0 border-b-0 border-gray-300 w-64 p-5 hidden md:flex'>
+				<div className='flex flex-col gap-4'>
+					<div className='flex flex-row gap-4 align-middle items-center justify-between'>
+						<div className='flex flex-row gap-4 align-middle items-center'>
+							<div className='border border-gray-200 rounded-full w-10 h-10 bg-gray-200'></div>
+							<div className='flex flex-col'>
+								<h4 className='text-sm font-semibold'>
+									{currentUser?.username}
+								</h4>
+								<h4 className='text-sm'>{currentUser?.role.toUpperCase()}</h4>
+							</div>
+						</div>
+						<div className='flex gap-2'>
+							<Link to='#'>
+								<FaGear className='h-5 w-5 text-gray-600 hover:text-gray-800' />
+							</Link>
+							<button onClick={handleLogout}>
+								<FaRightFromBracket className='h-5 w-5 text-red-500 hover:text-red-700' />
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
+	)
+}
+
+export default StaffSidebar
